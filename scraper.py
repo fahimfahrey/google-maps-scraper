@@ -77,6 +77,36 @@ def _end_of_list_visible(page) -> bool:
     return page.locator(f'text="{_END_OF_LIST_TEXT}"').count() > 0
 
 
+def _scroll_feed(page) -> None:
+    """Scroll the Maps results feed until all results load.
+
+    Stops when 'end of list' notice appears or _SCROLL_STALE_LIMIT consecutive
+    scrolls produce no scrollHeight increase.
+    """
+    feed = _locate_feed(page)
+    handle = feed.element_handle()
+    prev_height = 0
+    stale_count = 0
+
+    while True:
+        if _end_of_list_visible(page):
+            break
+
+        current_height = page.evaluate(
+            "(args) => { args[0].scrollBy(0, args[1]); return args[0].scrollHeight; }",
+            [handle, _SCROLL_STEP_PX],
+        )
+        time.sleep(random.uniform(_SCROLL_JITTER_MIN, _SCROLL_JITTER_MAX))
+
+        if current_height <= prev_height:
+            stale_count += 1
+            if stale_count >= _SCROLL_STALE_LIMIT:
+                break
+        else:
+            stale_count = 0
+            prev_height = current_height
+
+
 def scrape(url: str) -> list[dict]:
     """Scrape `url` and return list of result dicts."""
     with sync_playwright() as p:

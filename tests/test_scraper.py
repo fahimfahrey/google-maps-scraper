@@ -339,3 +339,168 @@ class TestEndOfListVisible:
 
         call_selector = mock_page.locator.call_args[0][0]
         assert scraper._END_OF_LIST_TEXT in call_selector
+
+
+class TestScrollFeed:
+    """Tests for _scroll_feed helper."""
+
+    def _make_page_mock(self, heights, end_of_list_counts=None):
+        """Build a mock page that returns sequential scrollHeight values.
+
+        heights: list of ints returned by page.evaluate on successive calls.
+        end_of_list_counts: list of ints for _end_of_list_visible locator.count().
+                            Defaults to all-0 (never reached end).
+        """
+        mock_page = MagicMock()
+
+        if end_of_list_counts is None:
+            end_of_list_counts = [0] * (len(heights) + 5)
+
+        eol_iter = iter(end_of_list_counts)
+
+        def locator_side_effect(selector):
+            loc = MagicMock()
+            if scraper._END_OF_LIST_TEXT in selector:
+                loc.count.side_effect = lambda: next(eol_iter, 0)
+            else:
+                loc.count.return_value = 1
+                loc.first.element_handle.return_value = MagicMock()
+            return loc
+
+        mock_page.locator.side_effect = locator_side_effect
+
+        height_iter = iter(heights)
+        mock_page.evaluate.side_effect = lambda js, *args: next(height_iter, heights[-1])
+
+        return mock_page
+
+    def test_scroll_feed_breaks_on_end_of_list(self):
+        """Stops immediately when end-of-list notice is present on first check."""
+        mock_page = MagicMock()
+
+        eol_loc = MagicMock()
+        eol_loc.count.return_value = 1
+
+        feed_loc = MagicMock()
+        feed_loc.count.return_value = 1
+        feed_handle = MagicMock()
+        feed_loc.first.element_handle.return_value = feed_handle
+
+        def locator_side_effect(selector):
+            if scraper._END_OF_LIST_TEXT in selector:
+                return eol_loc
+            return feed_loc
+
+        mock_page.locator.side_effect = locator_side_effect
+
+        with patch("scraper.time") as mock_time, \
+             patch("scraper._locate_feed", return_value=feed_loc.first):
+            feed_loc.first.element_handle.return_value = feed_handle
+            scraper._scroll_feed(mock_page)
+
+        mock_page.evaluate.assert_not_called()
+        mock_time.sleep.assert_not_called()
+
+    def test_scroll_feed_breaks_after_three_stale_scrolls(self):
+        """Stops after _SCROLL_STALE_LIMIT consecutive scrolls with no height change."""
+        mock_page = MagicMock()
+        feed_handle = MagicMock()
+        mock_feed_locator = MagicMock()
+        mock_feed_locator.element_handle.return_value = feed_handle
+
+        eol_loc = MagicMock()
+        eol_loc.count.return_value = 0
+        mock_page.locator.return_value = eol_loc
+
+        # scrollHeight stays at 3000 on every call — always stale
+        mock_page.evaluate.return_value = 3_000
+
+        with patch("scraper.time") as mock_time, \
+             patch("scraper.random.uniform", return_value=2.0), \
+             patch("scraper._locate_feed", return_value=mock_feed_locator), \
+             patch("scraper._end_of_list_visible", return_value=False):
+            scraper._scroll_feed(mock_page)
+
+        assert mock_time.sleep.call_count == scraper._SCROLL_STALE_LIMIT + 1
+
+    def test_scroll_feed_resets_stale_count_on_height_increase(self):
+        """Stale counter resets when scrollHeight grows."""
+        mock_page = MagicMock()
+        feed_handle = MagicMock()
+        mock_feed_locator = MagicMock()
+        mock_feed_locator.element_handle.return_value = feed_handle
+
+        # heights: grows twice, then stays (3 stale)
+        # Iteration 1: evaluate → 3000 (grew from 0) stale=0
+        # Iteration 2: evaluate → 6000 (grew) stale=0
+        # Iteration 3: evaluate → 6000 (stale) stale=1
+        # Iteration 4: evaluate → 6000 (stale) stale=2
+        # Iteration 5: evaluate → 6000 (stale) stale=3 → break
+        heights = iter([3_000, 6_000, 6_000, 6_000, 6_000])
+        mock_page.evaluate.side_effect = lambda js, *args: next(heights, 6_000)
+
+        with patch("scraper.time"), \
+             patch("scraper.random.uniform", return_value=2.0), \
+             patch("scraper._locate_feed", return_value=mock_feed_locator), \
+             patch("scraper._end_of_list_visible", return_value=False):
+            scraper._scroll_feed(mock_page)
+
+        assert mock_page.evaluate.call_count == 5
+
+    def test_scroll_feed_uses_scroll_step_constant(self):
+        """Evaluate call passes _SCROLL_STEP_PX in arguments."""
+        mock_page = MagicMock()
+        feed_handle = MagicMock()
+        mock_feed_locator = MagicMock()
+        mock_feed_locator.element_handle.return_value = feed_handle
+
+        mock_page.evaluate.return_value = 0
+
+        with patch("scraper.time"), \
+             patch("scraper.random.uniform", return_value=2.0), \
+             patch("scraper._locate_feed", return_value=mock_feed_locator), \
+             patch("scraper._end_of_list_visible", return_value=False):
+            scraper._scroll_feed(mock_page)
+
+        for call in mock_page.evaluate.call_args_list:
+            args = call[0][1] if len(call[0]) > 1 else []
+            if scraper._SCROLL_STEP_PX in args:
+                return
+        assert False, f"_SCROLL_STEP_PX not found in evaluate args"
+
+    def test_scroll_feed_sleep_uses_random_jitter(self):
+        """time.sleep is called with result of random.uniform(jitter_min, jitter_max)."""
+        mock_page = MagicMock()
+        feed_handle = MagicMock()
+        mock_feed_locator = MagicMock()
+        mock_feed_locator.element_handle.return_value = feed_handle
+
+        mock_page.evaluate.return_value = 0
+
+        with patch("scraper.time") as mock_time, \
+             patch("scraper.random.uniform", return_value=2.75) as mock_uniform, \
+             patch("scraper._locate_feed", return_value=mock_feed_locator), \
+             patch("scraper._end_of_list_visible", return_value=False):
+            scraper._scroll_feed(mock_page)
+
+        mock_uniform.assert_called_with(
+            scraper._SCROLL_JITTER_MIN, scraper._SCROLL_JITTER_MAX
+        )
+        mock_time.sleep.assert_called_with(2.75)
+
+    def test_scroll_feed_calls_locate_feed_once(self):
+        """_locate_feed called exactly once — element handle cached for loop."""
+        mock_page = MagicMock()
+        feed_handle = MagicMock()
+        mock_feed_locator = MagicMock()
+        mock_feed_locator.element_handle.return_value = feed_handle
+
+        mock_page.evaluate.return_value = 0
+
+        with patch("scraper.time"), \
+             patch("scraper.random.uniform", return_value=2.0), \
+             patch("scraper._locate_feed", return_value=mock_feed_locator) as mock_locate, \
+             patch("scraper._end_of_list_visible", return_value=False):
+            scraper._scroll_feed(mock_page)
+
+        mock_locate.assert_called_once_with(mock_page)
