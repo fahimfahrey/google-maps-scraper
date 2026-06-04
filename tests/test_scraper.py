@@ -265,3 +265,46 @@ class TestScrollConstants:
 
     def test_end_of_list_text_matches_maps_message(self):
         assert scraper._END_OF_LIST_TEXT == "You've reached the end of the list"
+
+
+class TestLocateFeed:
+    """Tests for _locate_feed helper."""
+
+    def test_locate_feed_returns_first_match_on_primary_selector(self):
+        """Primary selector div[role='feed'] resolves when count > 0."""
+        mock_page = MagicMock()
+        mock_locator = MagicMock()
+        mock_locator.count.return_value = 1
+        mock_page.locator.return_value = mock_locator
+
+        result = scraper._locate_feed(mock_page)
+
+        mock_page.locator.assert_called_with('div[role="feed"]')
+        assert result is mock_locator.first
+
+    def test_locate_feed_falls_back_to_aria_label_selector(self):
+        """When primary selector has count 0, tries aria-label fallback."""
+        mock_page = MagicMock()
+
+        primary_locator = MagicMock()
+        primary_locator.count.return_value = 0
+
+        fallback_locator = MagicMock()
+        fallback_locator.count.return_value = 1
+
+        mock_page.locator.side_effect = [primary_locator, fallback_locator]
+
+        result = scraper._locate_feed(mock_page)
+
+        assert mock_page.locator.call_count == 2
+        assert result is fallback_locator.first
+
+    def test_locate_feed_raises_when_no_selector_matches(self):
+        """RuntimeError raised when all selectors return count 0."""
+        mock_page = MagicMock()
+        empty_locator = MagicMock()
+        empty_locator.count.return_value = 0
+        mock_page.locator.return_value = empty_locator
+
+        with pytest.raises(RuntimeError, match="Maps feed container not found"):
+            scraper._locate_feed(mock_page)

@@ -58,6 +58,20 @@ def _block_media(page) -> None:
     )
 
 
+def _locate_feed(page):
+    """Return .first locator for the Maps results feed container.
+
+    Raises RuntimeError if no selector in _FEED_SELECTORS matches.
+    """
+    for selector in _FEED_SELECTORS:
+        loc = page.locator(selector)
+        if loc.count() > 0:
+            return loc.first
+    raise RuntimeError(
+        f"Maps feed container not found. Tried: {list(_FEED_SELECTORS)}"
+    )
+
+
 def scrape(url: str) -> list[dict]:
     """Scrape `url` and return list of result dicts."""
     with sync_playwright() as p:
