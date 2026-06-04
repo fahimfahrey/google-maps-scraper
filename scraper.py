@@ -1,8 +1,10 @@
 """Automation logic: Playwright-driven scraping with stealth."""
+from __future__ import annotations
 
 import re
 import random
 import time
+from collections.abc import Callable
 from urllib.parse import quote_plus
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 from playwright_stealth import Stealth
@@ -282,19 +284,32 @@ def scrape(url: str) -> list[dict]:
             return _scrape_one_url(browser, url)
 
 
-def scrape_multi(queries: list[str], delay_preset: str = "normal") -> list[dict]:
+def scrape_multi(
+    queries: list[str],
+    delay_preset: str = "normal",
+    row_callback: Callable[[dict], None] | None = None,
+    log_callback: Callable[[str], None] | None = None,
+) -> list[dict]:
     """Scrape multiple sub-region queries and return deduplicated results.
 
     Each query runs in its own fresh BrowserContext so cookies and
     local-storage tracking state are cleared between iterations.
     A randomised inter-query delay mimics human pacing between searches.
     Results from all queries are merged and deduplicated by name+phone key.
+
+    Args:
+        queries: List of search queries to scrape.
+        delay_preset: Execution speed preset (slow, normal, fast).
+        row_callback: Optional callback fired once per unique deduplicated record.
+        log_callback: Optional callback fired once per query with progress text.
     """
     seen_keys: set[str] = set()
     results: list[dict] = []
     with sync_playwright() as p:
         with p.chromium.launch(headless=True, args=_LAUNCH_ARGS) as browser:
             for i, query in enumerate(queries):
+                if log_callback is not None:
+                    log_callback(f"[{i + 1}/{len(queries)}] {query}")
                 url = _query_to_url(query)
                 batch = _scrape_one_url(browser, url)
                 for record in batch:
@@ -302,6 +317,8 @@ def scrape_multi(queries: list[str], delay_preset: str = "normal") -> list[dict]
                     if key not in seen_keys:
                         seen_keys.add(key)
                         results.append(record)
+                        if row_callback is not None:
+                            row_callback(record)
                 if i < len(queries) - 1:
                     delay_min, delay_max = _SPEED_PRESETS.get(
                         delay_preset, _SPEED_PRESETS["normal"]
