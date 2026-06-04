@@ -1254,6 +1254,159 @@ class TestScrapeRefactored:
         )
 
 
+class TestScrapeMulti:
+    """Tests for scrape_multi(queries) grid-expansion entry point."""
+
+    def _setup_pw(self, mock_pw):
+        mock_p = MagicMock()
+        mock_browser = MagicMock()
+        mock_pw.return_value.__enter__.return_value = mock_p
+        mock_pw.return_value.__exit__.return_value = None
+        mock_p.chromium.launch.return_value.__enter__.return_value = mock_browser
+        mock_p.chromium.launch.return_value.__exit__.return_value = None
+        return mock_p, mock_browser
+
+    @patch('scraper.sync_playwright')
+    def test_returns_empty_list_for_empty_queries(self, mock_pw):
+        self._setup_pw(mock_pw)
+        result = scraper.scrape_multi([])
+        assert result == []
+
+    @patch('scraper.sync_playwright')
+    def test_calls_scrape_one_url_per_query(self, mock_pw):
+        _, mock_browser = self._setup_pw(mock_pw)
+
+        with patch('scraper._scrape_one_url', return_value=[]) as mock_sou, \
+             patch('scraper.time'):
+            scraper.scrape_multi(['Cafes in NYC', 'Bars in Brooklyn'])
+
+        assert mock_sou.call_count == 2
+
+    @patch('scraper.sync_playwright')
+    def test_passes_same_browser_to_all_calls(self, mock_pw):
+        _, mock_browser = self._setup_pw(mock_pw)
+
+        with patch('scraper._scrape_one_url', return_value=[]) as mock_sou, \
+             patch('scraper.time'):
+            scraper.scrape_multi(['q1', 'q2', 'q3'])
+
+        for c in mock_sou.call_args_list:
+            assert c[0][0] is mock_browser
+
+    @patch('scraper.sync_playwright')
+    def test_converts_queries_to_maps_urls(self, mock_pw):
+        _, mock_browser = self._setup_pw(mock_pw)
+
+        with patch('scraper._scrape_one_url', return_value=[]) as mock_sou, \
+             patch('scraper.time'):
+            scraper.scrape_multi(['Cafes in Astoria NY'])
+
+        called_url = mock_sou.call_args[0][1]
+        assert called_url.startswith('https://www.google.com/maps/search/')
+        assert 'Cafes' in called_url
+
+    @patch('scraper.sync_playwright')
+    def test_merges_results_from_all_queries(self, mock_pw):
+        _, _ = self._setup_pw(mock_pw)
+
+        batch1 = [{'name': 'Cafe A', 'phone': '111', 'rating': '', 'reviews': '', 'website': ''}]
+        batch2 = [{'name': 'Cafe B', 'phone': '222', 'rating': '', 'reviews': '', 'website': ''}]
+
+        with patch('scraper._scrape_one_url', side_effect=[batch1, batch2]), \
+             patch('scraper.time'):
+            result = scraper.scrape_multi(['q1', 'q2'])
+
+        assert len(result) == 2
+        assert {r['name'] for r in result} == {'Cafe A', 'Cafe B'}
+
+    @patch('scraper.sync_playwright')
+    def test_deduplicates_by_name_and_phone(self, mock_pw):
+        _, _ = self._setup_pw(mock_pw)
+
+        dup = {'name': 'Cafe A', 'phone': '111', 'rating': '4.0', 'reviews': '10', 'website': ''}
+
+        with patch('scraper._scrape_one_url', side_effect=[[dup], [dup]]), \
+             patch('scraper.time'):
+            result = scraper.scrape_multi(['q1', 'q2'])
+
+        assert len(result) == 1
+        assert result[0]['name'] == 'Cafe A'
+
+    @patch('scraper.sync_playwright')
+    def test_retains_first_occurrence_on_duplicate(self, mock_pw):
+        _, _ = self._setup_pw(mock_pw)
+
+        first = {'name': 'Cafe A', 'phone': '111', 'rating': '4.5', 'reviews': '200', 'website': 'first.com'}
+        second = {'name': 'Cafe A', 'phone': '111', 'rating': '3.0', 'reviews': '5', 'website': 'second.com'}
+
+        with patch('scraper._scrape_one_url', side_effect=[[first], [second]]), \
+             patch('scraper.time'):
+            result = scraper.scrape_multi(['q1', 'q2'])
+
+        assert result[0]['website'] == 'first.com'
+
+    @patch('scraper.sync_playwright')
+    def test_inter_query_sleep_called_n_minus_1_times(self, mock_pw):
+        _, _ = self._setup_pw(mock_pw)
+
+        with patch('scraper._scrape_one_url', return_value=[]), \
+             patch('scraper.time') as mock_time, \
+             patch('scraper.random.uniform', return_value=7.0):
+            scraper.scrape_multi(['q1', 'q2', 'q3'])
+
+        assert mock_time.sleep.call_count == 2
+
+    @patch('scraper.sync_playwright')
+    def test_inter_query_sleep_not_called_for_single_query(self, mock_pw):
+        _, _ = self._setup_pw(mock_pw)
+
+        with patch('scraper._scrape_one_url', return_value=[]), \
+             patch('scraper.time') as mock_time:
+            scraper.scrape_multi(['only_one'])
+
+        mock_time.sleep.assert_not_called()
+
+    @patch('scraper.sync_playwright')
+    def test_inter_query_sleep_uses_delay_constants(self, mock_pw):
+        _, _ = self._setup_pw(mock_pw)
+
+        with patch('scraper._scrape_one_url', return_value=[]), \
+             patch('scraper.time') as mock_time, \
+             patch('scraper.random.uniform', return_value=10.0) as mock_uniform:
+            scraper.scrape_multi(['q1', 'q2'])
+
+        mock_uniform.assert_called_with(
+            scraper._INTER_QUERY_DELAY_MIN, scraper._INTER_QUERY_DELAY_MAX
+        )
+        mock_time.sleep.assert_called_once_with(10.0)
+
+    @patch('scraper.sync_playwright')
+    def test_passes_launch_args(self, mock_pw):
+        mock_p, _ = self._setup_pw(mock_pw)
+
+        with patch('scraper._scrape_one_url', return_value=[]), \
+             patch('scraper.time'):
+            scraper.scrape_multi(['q1'])
+
+        mock_p.chromium.launch.assert_called_once_with(
+            headless=True, args=scraper._LAUNCH_ARGS
+        )
+
+    @patch('scraper.sync_playwright')
+    def test_preserves_insertion_order_of_first_occurrences(self, mock_pw):
+        _, _ = self._setup_pw(mock_pw)
+
+        r1 = {'name': 'Alpha', 'phone': '1', 'rating': '', 'reviews': '', 'website': ''}
+        r2 = {'name': 'Beta',  'phone': '2', 'rating': '', 'reviews': '', 'website': ''}
+        r3 = {'name': 'Gamma', 'phone': '3', 'rating': '', 'reviews': '', 'website': ''}
+
+        with patch('scraper._scrape_one_url', side_effect=[[r1, r2], [r3]]), \
+             patch('scraper.time'):
+            result = scraper.scrape_multi(['q1', 'q2'])
+
+        assert [r['name'] for r in result] == ['Alpha', 'Beta', 'Gamma']
+
+
 class TestScrapeReturnsResults:
     """Tests that scrape() returns parsed results from _collect_nodes."""
 

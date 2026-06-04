@@ -277,6 +277,33 @@ def scrape(url: str) -> list[dict]:
             return _scrape_one_url(browser, url)
 
 
+def scrape_multi(queries: list[str]) -> list[dict]:
+    """Scrape multiple sub-region queries and return deduplicated results.
+
+    Each query runs in its own fresh BrowserContext so cookies and
+    local-storage tracking state are cleared between iterations.
+    A randomised inter-query delay mimics human pacing between searches.
+    Results from all queries are merged and deduplicated by name+phone key.
+    """
+    seen_keys: set[str] = set()
+    results: list[dict] = []
+    with sync_playwright() as p:
+        with p.chromium.launch(headless=True, args=_LAUNCH_ARGS) as browser:
+            for i, query in enumerate(queries):
+                url = _query_to_url(query)
+                batch = _scrape_one_url(browser, url)
+                for record in batch:
+                    key = f"{record.get('name', '')}|{record.get('phone', '')}"
+                    if key not in seen_keys:
+                        seen_keys.add(key)
+                        results.append(record)
+                if i < len(queries) - 1:
+                    time.sleep(
+                        random.uniform(_INTER_QUERY_DELAY_MIN, _INTER_QUERY_DELAY_MAX)
+                    )
+    return results
+
+
 if __name__ == "__main__":  # pragma: no cover
     result = scrape("https://www.google.com/maps/search/coffee+shops+london")
     print("Scroll complete, results:", result)
