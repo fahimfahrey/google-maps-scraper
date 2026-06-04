@@ -1,16 +1,16 @@
 # Graph Report - google-map-scraper  (2026-06-05)
 
 ## Corpus Check
-- 99 files · ~136,256 words
+- 100 files · ~137,838 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2462 nodes · 2518 edges · 114 communities (99 shown, 15 thin omitted)
+- 2508 nodes · 2602 edges · 122 communities (107 shown, 15 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0fbf7508`
+- Built from commit: `bf465184`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -113,6 +113,7 @@
 - [[_COMMUNITY_Community 95|Community 95]]
 - [[_COMMUNITY_Community 96|Community 96]]
 - [[_COMMUNITY_Community 97|Community 97]]
+- [[_COMMUNITY_Community 98|Community 98]]
 - [[_COMMUNITY_Community 99|Community 99]]
 - [[_COMMUNITY_Community 100|Community 100]]
 - [[_COMMUNITY_Community 101|Community 101]]
@@ -126,34 +127,49 @@
 - [[_COMMUNITY_Community 109|Community 109]]
 - [[_COMMUNITY_Community 110|Community 110]]
 - [[_COMMUNITY_Community 111|Community 111]]
+- [[_COMMUNITY_Community 115|Community 115]]
+- [[_COMMUNITY_Community 116|Community 116]]
+- [[_COMMUNITY_Community 117|Community 117]]
+- [[_COMMUNITY_Community 118|Community 118]]
+- [[_COMMUNITY_Community 119|Community 119]]
+- [[_COMMUNITY_Community 120|Community 120]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Google Maps Scraper` - 17 edges
-2. `Angular Testing with Playwright` - 16 edges
-3. `_drain_queue()` - 15 edges
+1. `_drain_queue()` - 17 edges
+2. `Google Maps Scraper` - 17 edges
+3. `Angular Testing with Playwright` - 16 edges
 4. `TestScrapeMulti` - 15 edges
 5. `BeautifulSoup HTML Parsing` - 14 edges
 6. `Performance Optimization` - 14 edges
 7. `Next.js Testing Patterns` - 14 edges
-8. `str` - 13 edges
-9. `_scrape_one_url()` - 13 edges
-10. `Merging and Joining` - 13 edges
+8. `_apply_editor_changes()` - 13 edges
+9. `str` - 13 edges
+10. `_scrape_one_url()` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
-- None detected - all connections are within the same source files.
+- `_launch_browser()` --calls--> `_read_browser_engine()`  [EXTRACTED]
+  scraper.py → scraper.py  _Bridges community 120 → community 117_
+- `_read_browser_engine()` --references--> `str`  [EXTRACTED]
+  scraper.py → scraper.py  _Bridges community 120 → community 115_
+- `_collect_nodes()` --references--> `str`  [EXTRACTED]
+  scraper.py → scraper.py  _Bridges community 115 → community 116_
+- `_read_browser_executable()` --references--> `str`  [EXTRACTED]
+  scraper.py → scraper.py  _Bridges community 115 → community 117_
+- `scrape_multi()` --calls--> `_launch_browser()`  [EXTRACTED]
+  scraper.py → scraper.py  _Bridges community 117 → community 116_
 
 ## Import Cycles
 - None detected.
 
-## Communities (114 total, 15 thin omitted)
+## Communities (122 total, 15 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.05
-Nodes (55): bool, _block_media(), _build_context(), _collect_nodes(), _dismiss_consent(), _end_of_list_visible(), _extract_name(), _extract_phone() (+47 more)
+Cohesion: 0.17
+Nodes (3): Tests for row_callback / log_callback params added to scrape_multi., TestLogCallback, TestRowCallback
 
 ### Community 1 - "Community 1"
-Cohesion: 0.08
-Nodes (24): _adapt_lead(), _df_to_csv_bytes(), _df_to_excel_bytes(), _drain_queue(), DataFrame, int, str, Streamlit UI: sidebar control panel, live status, data table, export. (+16 more)
+Cohesion: 0.05
+Nodes (41): _adapt_lead(), _apply_editor_changes(), _df_to_csv_bytes(), _df_to_excel_bytes(), _drain_queue(), _leads_table(), bool, DataFrame (+33 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.05
@@ -448,8 +464,8 @@ Cohesion: 0.11
 Nodes (17): Advanced Optimization, Benchmarking Tools, Custom Benchmark Decorator, Database Optimization, Memory Optimization, Pattern 11: NumPy for Numerical Operations, Pattern 12: Caching with functools.lru_cache, Pattern 13: Using __slots__ for Memory (+9 more)
 
 ### Community 75 - "Community 75"
-Cohesion: 0.12
-Nodes (11): count_leads(), fetch_all_leads_as_dataframe(), initialize_db(), DataFrame, int, Storage layer: SQLite persistence via sqlite3 + pandas., Create leads table if it doesn't exist. Idempotent., Insert a lead with deduplication on google_id. Silently skips duplicates. (+3 more)
+Cohesion: 0.07
+Nodes (30): count_leads(), delete_all(), delete_by_query(), delete_lead(), fetch_all_leads_as_dataframe(), initialize_db(), DataFrame, int (+22 more)
 
 ### Community 76 - "Community 76"
 Cohesion: 0.12
@@ -519,6 +535,10 @@ Nodes (7): Tests for _build_context helper., Assert user_agent and viewport are 
 Cohesion: 0.20
 Nodes (4): Tests for _parse_business_node orchestrator., Verify BeautifulSoup is called with 'lxml' parser., Exception in BeautifulSoup construction returns empty dict., TestParseBusinessNode
 
+### Community 98 - "Community 98"
+Cohesion: 0.18
+Nodes (11): bool, _end_of_list_visible(), _locate_feed(), bool, Return .first locator for the Maps results feed container.      Raises RuntimeEr, Return .first locator for the Maps results feed container.      Raises RuntimeEr, Return True if the Maps end-of-results notice is present in the DOM., Scroll the Maps results feed until all results load.      Stops when 'end of lis (+3 more)
+
 ### Community 100 - "Community 100"
 Cohesion: 0.25
 Nodes (5): Assert consent texts cover multiple languages., Tests for _dismiss_consent helper., Assert consent button is clicked and networkidle is awaited., Assert no exception propagates when click times out., TestDismissConsent
@@ -531,25 +551,49 @@ Nodes (5): Tests for _locate_feed helper., Primary selector div[role='feed'] res
 Cohesion: 0.25
 Nodes (5): Tests that scrape() wires _scroll_feed after navigation., scrape() calls _scroll_feed(page) after navigation., scrape() navigates to the caller-supplied url, not _MAPS_URL., _scroll_feed is called after _dismiss_consent, not before., TestScrapeScrollIntegration
 
+### Community 115 - "Community 115"
+Cohesion: 0.38
+Nodes (10): _extract_name(), _extract_phone(), _extract_rating(), _extract_review_count(), _extract_website(), _parse_business_node(), str, _query_to_url() (+2 more)
+
+### Community 116 - "Community 116"
+Cohesion: 0.24
+Nodes (10): _collect_nodes(), int, Collect outer HTML strings for each unique business card in the feed.      Queri, Collect outer HTML strings for each unique business card in the feed.      Queri, Run one full scrape cycle against `url` on an existing browser.      Creates a f, Run one full scrape cycle against `url` on an existing browser.      Creates a f, Scrape multiple sub-region queries and return deduplicated results.      Each qu, Scrape multiple sub-region queries and return deduplicated results.      Each qu (+2 more)
+
+### Community 117 - "Community 117"
+Cohesion: 0.29
+Nodes (7): _launch_browser(), Scrape `url` and return list of result dicts., Scrape `url` and return list of result dicts., Return absolute path to browser binary, or None to use Playwright-managed binary, Launch the appropriate headless browser based on engine selection., _read_browser_executable(), scrape()
+
+### Community 118 - "Community 118"
+Cohesion: 0.60
+Nodes (5): _make_mock_pw(), test_delay_preset_fast_uses_shorter_range(), test_delay_preset_normal_is_default(), test_delay_preset_slow_uses_wider_range(), test_delay_preset_unknown_falls_back_to_normal()
+
+### Community 119 - "Community 119"
+Cohesion: 0.40
+Nodes (5): _block_media(), _dismiss_consent(), Detect and click 'Accept all' consent button if present., Detect and click 'Accept all' consent button if present., Abort image and font requests to reduce bandwidth.
+
+### Community 120 - "Community 120"
+Cohesion: 0.40
+Nodes (5): _build_context(), Create and stealth-configure a BrowserContext., Create and stealth-configure a BrowserContext., Return the browser engine to use.      Precedence: PLAYWRIGHT_BROWSER env var >, _read_browser_engine()
+
 ## Knowledge Gaps
-- **1546 isolated node(s):** `int`, `allow`, `str`, `int`, `DataFrame` (+1541 more)
+- **1545 isolated node(s):** `int`, `allow`, `int`, `DataFrame`, `bool` (+1540 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `TestScrapeScrollIntegration` connect `Community 107` to `Community 69`?**
+  _High betweenness centrality (0.004) - this node is a cross-community bridge._
 - **Why does `TestScrollFeed` connect `Community 81` to `Community 69`?**
   _High betweenness centrality (0.003) - this node is a cross-community bridge._
-- **Why does `TestParseBusinessNode` connect `Community 93` to `Community 69`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **Why does `TestCollectNodes` connect `Community 99` to `Community 69`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
+- **Why does `TestScrape` connect `Community 89` to `Community 69`?**
+  _High betweenness centrality (0.003) - this node is a cross-community bridge._
 - **What connects `int`, `Return the venv's Python executable, cross-platform.      POSIX venvs put it at`, `Walk up from `start` looking for a `.git` directory or file.      Returns the di` to the rest of the system?**
-  _1645 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.05034965034965035 - nodes in this community are weakly interconnected._
+  _1659 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.0783673469387755 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05369369369369369 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.05 - nodes in this community are weakly interconnected._
+- **Should `Community 3` be split into smaller, more focused modules?**
+  _Cohesion score 0.05128205128205128 - nodes in this community are weakly interconnected._

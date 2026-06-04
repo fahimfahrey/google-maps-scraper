@@ -148,6 +148,15 @@
       "norm_label": "allow"
     },
     {
+      "label": "_uicheck.py",
+      "file_type": "code",
+      "source_file": "_uicheck.py",
+      "source_location": "L1",
+      "id": "uicheck",
+      "community": 121,
+      "norm_label": "_uicheck.py"
+    },
+    {
       "label": "app.py",
       "file_type": "code",
       "source_file": "app.py",
@@ -160,16 +169,25 @@
       "label": "_adapt_lead()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L21",
+      "source_location": "L25",
       "id": "app_adapt_lead",
       "community": 1,
       "norm_label": "_adapt_lead()"
     },
     {
+      "label": "str",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L25",
+      "id": "app_py_str",
+      "community": 1,
+      "norm_label": "str"
+    },
+    {
       "label": "_df_to_csv_bytes()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L37",
+      "source_location": "L46",
       "id": "app_df_to_csv_bytes",
       "community": 1,
       "norm_label": "_df_to_csv_bytes()"
@@ -178,7 +196,7 @@
       "label": "DataFrame",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L37",
+      "source_location": "L46",
       "id": "app_py_dataframe",
       "community": 1,
       "norm_label": "dataframe"
@@ -187,7 +205,7 @@
       "label": "bytes",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L37",
+      "source_location": "L46",
       "id": "bytes",
       "community": 1,
       "norm_label": "bytes"
@@ -196,16 +214,34 @@
       "label": "_df_to_excel_bytes()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L41",
+      "source_location": "L50",
       "id": "app_df_to_excel_bytes",
       "community": 1,
       "norm_label": "_df_to_excel_bytes()"
     },
     {
+      "label": "_slug()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L56",
+      "id": "app_slug",
+      "community": 1,
+      "norm_label": "_slug()"
+    },
+    {
+      "label": "_query_of()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L61",
+      "id": "app_query_of",
+      "community": 1,
+      "norm_label": "_query_of()"
+    },
+    {
       "label": "_drain_queue()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L47",
+      "source_location": "L66",
       "id": "app_drain_queue",
       "community": 1,
       "norm_label": "_drain_queue()"
@@ -214,16 +250,61 @@
       "label": "Queue",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L47",
+      "source_location": "L66",
       "id": "queue",
       "community": 1,
       "norm_label": "queue"
     },
     {
+      "label": "_hero()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L245",
+      "id": "app_hero",
+      "community": 1,
+      "norm_label": "_hero()"
+    },
+    {
+      "label": "_apply_editor_changes()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L324",
+      "id": "app_apply_editor_changes",
+      "community": 1,
+      "norm_label": "_apply_editor_changes()"
+    },
+    {
+      "label": "bool",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L324",
+      "id": "app_py_bool",
+      "community": 1,
+      "norm_label": "bool"
+    },
+    {
+      "label": "_leads_table()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L360",
+      "id": "app_leads_table",
+      "community": 1,
+      "norm_label": "_leads_table()"
+    },
+    {
+      "label": "_render_results()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L438",
+      "id": "app_render_results",
+      "community": 1,
+      "norm_label": "_render_results()"
+    },
+    {
       "label": "_status_panel()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L152",
+      "source_location": "L472",
       "id": "app_status_panel",
       "community": 1,
       "norm_label": "_status_panel()"
@@ -232,62 +313,98 @@
       "label": "_run_scrape()",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L238",
+      "source_location": "L519",
       "id": "app_run_scrape",
       "community": 1,
       "norm_label": "_run_scrape()"
     },
     {
-      "label": "str",
-      "file_type": "code",
-      "source_file": "app.py",
-      "source_location": "L238",
-      "id": "app_py_str",
-      "community": 1,
-      "norm_label": "str"
-    },
-    {
       "label": "int",
       "file_type": "code",
       "source_file": "app.py",
-      "source_location": "L238",
+      "source_location": "L519",
       "id": "app_py_int",
       "community": 1,
       "norm_label": "int"
     },
     {
-      "label": "Streamlit UI: sidebar control panel, live status, data table, export.",
+      "label": "Streamlit UI: an 'operations console' for Google Maps scraping.  Sidebar control",
       "file_type": "rationale",
       "source_file": "app.py",
       "source_location": "L1",
       "id": "app_rationale_1",
       "community": 1,
-      "norm_label": "streamlit ui: sidebar control panel, live status, data table, export."
+      "norm_label": "streamlit ui: an 'operations console' for google maps scraping.  sidebar control"
     },
     {
-      "label": "Map scraper result keys to database.save_lead expected keys.",
+      "label": "Map scraper result keys to database.save_lead expected keys.      `search_query`",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L22",
-      "id": "app_rationale_22",
+      "source_location": "L26",
+      "id": "app_rationale_26",
       "community": 1,
-      "norm_label": "map scraper result keys to database.save_lead expected keys."
+      "norm_label": "map scraper result keys to database.save_lead expected keys.      `search_query`"
+    },
+    {
+      "label": "Filesystem/key-safe slug from arbitrary query text.",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L57",
+      "id": "app_rationale_57",
+      "community": 1,
+      "norm_label": "filesystem/key-safe slug from arbitrary query text."
+    },
+    {
+      "label": "Extract the query from a '[i/n] query' progress log line.",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L62",
+      "id": "app_rationale_62",
+      "community": 1,
+      "norm_label": "extract the query from a '[i/n] query' progress log line."
     },
     {
       "label": "Drain all available messages from out_q into state. Non-blocking.      Message s",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L48",
-      "id": "app_rationale_48",
+      "source_location": "L67",
+      "id": "app_rationale_67",
       "community": 1,
       "norm_label": "drain all available messages from out_q into state. non-blocking.      message s"
+    },
+    {
+      "label": "Persist a data_editor's edits / row-deletions / additions to the DB.      `df` i",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L325",
+      "id": "app_rationale_325",
+      "community": 1,
+      "norm_label": "persist a data_editor's edits / row-deletions / additions to the db.      `df` i"
+    },
+    {
+      "label": "Editable leads table: inline edit, row delete (trash), CSV, danger zone.      Ed",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L361",
+      "id": "app_rationale_361",
+      "community": 1,
+      "norm_label": "editable leads table: inline edit, row delete (trash), csv, danger zone.      ed"
+    },
+    {
+      "label": "Per-query tabs (+ an All tab). Tab labels are stable (no counts) so the     sele",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L439",
+      "id": "app_rationale_439",
+      "community": 1,
+      "norm_label": "per-query tabs (+ an all tab). tab labels are stable (no counts) so the     sele"
     },
     {
       "label": "Background thread. Feeds out_q; row_callback handles DB write + counter.      Ru",
       "file_type": "rationale",
       "source_file": "app.py",
-      "source_location": "L244",
-      "id": "app_rationale_244",
+      "source_location": "L525",
+      "id": "app_rationale_525",
       "community": 1,
       "norm_label": "background thread. feeds out_q; row_callback handles db write + counter.      ru"
     },
@@ -304,7 +421,7 @@
       "label": "initialize_db()",
       "file_type": "code",
       "source_file": "database.py",
-      "source_location": "L32",
+      "source_location": "L33",
       "id": "database_initialize_db",
       "community": 75,
       "norm_label": "initialize_db()"
@@ -313,7 +430,7 @@
       "label": "save_lead()",
       "file_type": "code",
       "source_file": "database.py",
-      "source_location": "L38",
+      "source_location": "L43",
       "id": "database_save_lead",
       "community": 75,
       "norm_label": "save_lead()"
@@ -322,7 +439,7 @@
       "label": "fetch_all_leads_as_dataframe()",
       "file_type": "code",
       "source_file": "database.py",
-      "source_location": "L55",
+      "source_location": "L61",
       "id": "database_fetch_all_leads_as_dataframe",
       "community": 75,
       "norm_label": "fetch_all_leads_as_dataframe()"
@@ -331,7 +448,7 @@
       "label": "DataFrame",
       "file_type": "code",
       "source_file": "database.py",
-      "source_location": "L55",
+      "source_location": "L61",
       "id": "database_py_dataframe",
       "community": 75,
       "norm_label": "dataframe"
@@ -340,7 +457,7 @@
       "label": "count_leads()",
       "file_type": "code",
       "source_file": "database.py",
-      "source_location": "L61",
+      "source_location": "L67",
       "id": "database_count_leads",
       "community": 75,
       "norm_label": "count_leads()"
@@ -349,10 +466,55 @@
       "label": "int",
       "file_type": "code",
       "source_file": "database.py",
-      "source_location": "L61",
+      "source_location": "L67",
       "id": "database_py_int",
       "community": 75,
       "norm_label": "int"
+    },
+    {
+      "label": "update_lead()",
+      "file_type": "code",
+      "source_file": "database.py",
+      "source_location": "L80",
+      "id": "database_update_lead",
+      "community": 75,
+      "norm_label": "update_lead()"
+    },
+    {
+      "label": "str",
+      "file_type": "code",
+      "source_file": "database.py",
+      "source_location": "L80",
+      "id": "database_py_str",
+      "community": 75,
+      "norm_label": "str"
+    },
+    {
+      "label": "delete_lead()",
+      "file_type": "code",
+      "source_file": "database.py",
+      "source_location": "L95",
+      "id": "database_delete_lead",
+      "community": 75,
+      "norm_label": "delete_lead()"
+    },
+    {
+      "label": "delete_by_query()",
+      "file_type": "code",
+      "source_file": "database.py",
+      "source_location": "L101",
+      "id": "database_delete_by_query",
+      "community": 75,
+      "norm_label": "delete_by_query()"
+    },
+    {
+      "label": "delete_all()",
+      "file_type": "code",
+      "source_file": "database.py",
+      "source_location": "L115",
+      "id": "database_delete_all",
+      "community": 75,
+      "norm_label": "delete_all()"
     },
     {
       "label": "Storage layer: SQLite persistence via sqlite3 + pandas.",
@@ -364,20 +526,20 @@
       "norm_label": "storage layer: sqlite persistence via sqlite3 + pandas."
     },
     {
-      "label": "Create leads table if it doesn't exist. Idempotent.",
+      "label": "Create leads table if it doesn't exist, migrating older schemas. Idempotent.",
       "file_type": "rationale",
       "source_file": "database.py",
-      "source_location": "L33",
-      "id": "database_rationale_33",
+      "source_location": "L34",
+      "id": "database_rationale_34",
       "community": 75,
-      "norm_label": "create leads table if it doesn't exist. idempotent."
+      "norm_label": "create leads table if it doesn't exist, migrating older schemas. idempotent."
     },
     {
       "label": "Insert a lead with deduplication on google_id. Silently skips duplicates.",
       "file_type": "rationale",
       "source_file": "database.py",
-      "source_location": "L39",
-      "id": "database_rationale_39",
+      "source_location": "L44",
+      "id": "database_rationale_44",
       "community": 75,
       "norm_label": "insert a lead with deduplication on google_id. silently skips duplicates."
     },
@@ -385,8 +547,8 @@
       "label": "Return all leads as a pandas DataFrame.",
       "file_type": "rationale",
       "source_file": "database.py",
-      "source_location": "L56",
-      "id": "database_rationale_56",
+      "source_location": "L62",
+      "id": "database_rationale_62",
       "community": 75,
       "norm_label": "return all leads as a pandas dataframe."
     },
@@ -394,10 +556,46 @@
       "label": "Return total number of leads stored in the database.",
       "file_type": "rationale",
       "source_file": "database.py",
-      "source_location": "L62",
-      "id": "database_rationale_62",
+      "source_location": "L68",
+      "id": "database_rationale_68",
       "community": 75,
       "norm_label": "return total number of leads stored in the database."
+    },
+    {
+      "label": "Update editable columns of one lead, addressed by google_id.      Unknown / non-",
+      "file_type": "rationale",
+      "source_file": "database.py",
+      "source_location": "L81",
+      "id": "database_rationale_81",
+      "community": 75,
+      "norm_label": "update editable columns of one lead, addressed by google_id.      unknown / non-"
+    },
+    {
+      "label": "Delete a single lead by google_id.",
+      "file_type": "rationale",
+      "source_file": "database.py",
+      "source_location": "L96",
+      "id": "database_rationale_96",
+      "community": 75,
+      "norm_label": "delete a single lead by google_id."
+    },
+    {
+      "label": "Delete all leads belonging to one query tab; return rows removed.      The label",
+      "file_type": "rationale",
+      "source_file": "database.py",
+      "source_location": "L102",
+      "id": "database_rationale_102",
+      "community": 75,
+      "norm_label": "delete all leads belonging to one query tab; return rows removed.      the label"
+    },
+    {
+      "label": "Remove every lead from the table.",
+      "file_type": "rationale",
+      "source_file": "database.py",
+      "source_location": "L116",
+      "id": "database_rationale_116",
+      "community": 75,
+      "norm_label": "remove every lead from the table."
     },
     {
       "label": "scraper.py",
@@ -405,7 +603,7 @@
       "source_file": "scraper.py",
       "source_location": "L1",
       "id": "scraper",
-      "community": 0,
+      "community": 115,
       "norm_label": "scraper.py"
     },
     {
@@ -414,7 +612,7 @@
       "source_file": "scraper.py",
       "source_location": "L29",
       "id": "scraper_read_browser_engine",
-      "community": 0,
+      "community": 120,
       "norm_label": "_read_browser_engine()"
     },
     {
@@ -423,7 +621,7 @@
       "source_file": "scraper.py",
       "source_location": "L29",
       "id": "scraper_py_str",
-      "community": 0,
+      "community": 115,
       "norm_label": "str"
     },
     {
@@ -432,7 +630,7 @@
       "source_file": "scraper.py",
       "source_location": "L48",
       "id": "scraper_read_browser_executable",
-      "community": 0,
+      "community": 117,
       "norm_label": "_read_browser_executable()"
     },
     {
@@ -441,7 +639,7 @@
       "source_file": "scraper.py",
       "source_location": "L67",
       "id": "scraper_launch_browser",
-      "community": 0,
+      "community": 117,
       "norm_label": "_launch_browser()"
     },
     {
@@ -450,7 +648,7 @@
       "source_file": "scraper.py",
       "source_location": "L110",
       "id": "scraper_query_to_url",
-      "community": 0,
+      "community": 115,
       "norm_label": "_query_to_url()"
     },
     {
@@ -459,7 +657,7 @@
       "source_file": "scraper.py",
       "source_location": "L118",
       "id": "scraper_extract_name",
-      "community": 0,
+      "community": 115,
       "norm_label": "_extract_name()"
     },
     {
@@ -468,7 +666,7 @@
       "source_file": "scraper.py",
       "source_location": "L133",
       "id": "scraper_extract_rating",
-      "community": 0,
+      "community": 115,
       "norm_label": "_extract_rating()"
     },
     {
@@ -477,7 +675,7 @@
       "source_file": "scraper.py",
       "source_location": "L151",
       "id": "scraper_extract_review_count",
-      "community": 0,
+      "community": 115,
       "norm_label": "_extract_review_count()"
     },
     {
@@ -486,7 +684,7 @@
       "source_file": "scraper.py",
       "source_location": "L162",
       "id": "scraper_extract_phone",
-      "community": 0,
+      "community": 115,
       "norm_label": "_extract_phone()"
     },
     {
@@ -495,7 +693,7 @@
       "source_file": "scraper.py",
       "source_location": "L175",
       "id": "scraper_extract_website",
-      "community": 0,
+      "community": 115,
       "norm_label": "_extract_website()"
     },
     {
@@ -504,7 +702,7 @@
       "source_file": "scraper.py",
       "source_location": "L189",
       "id": "scraper_parse_business_node",
-      "community": 0,
+      "community": 115,
       "norm_label": "_parse_business_node()"
     },
     {
@@ -513,7 +711,7 @@
       "source_file": "scraper.py",
       "source_location": "L225",
       "id": "scraper_collect_nodes",
-      "community": 0,
+      "community": 116,
       "norm_label": "_collect_nodes()"
     },
     {
@@ -522,7 +720,7 @@
       "source_file": "scraper.py",
       "source_location": "L225",
       "id": "scraper_py_int",
-      "community": 0,
+      "community": 116,
       "norm_label": "int"
     },
     {
@@ -531,7 +729,7 @@
       "source_file": "scraper.py",
       "source_location": "L275",
       "id": "scraper_build_context",
-      "community": 0,
+      "community": 120,
       "norm_label": "_build_context()"
     },
     {
@@ -540,7 +738,7 @@
       "source_file": "scraper.py",
       "source_location": "L286",
       "id": "scraper_dismiss_consent",
-      "community": 0,
+      "community": 119,
       "norm_label": "_dismiss_consent()"
     },
     {
@@ -549,7 +747,7 @@
       "source_file": "scraper.py",
       "source_location": "L298",
       "id": "scraper_block_media",
-      "community": 0,
+      "community": 119,
       "norm_label": "_block_media()"
     },
     {
@@ -558,7 +756,7 @@
       "source_file": "scraper.py",
       "source_location": "L306",
       "id": "scraper_locate_feed",
-      "community": 0,
+      "community": 98,
       "norm_label": "_locate_feed()"
     },
     {
@@ -567,7 +765,7 @@
       "source_file": "scraper.py",
       "source_location": "L320",
       "id": "scraper_end_of_list_visible",
-      "community": 0,
+      "community": 98,
       "norm_label": "_end_of_list_visible()"
     },
     {
@@ -575,8 +773,8 @@
       "file_type": "code",
       "source_file": "scraper.py",
       "source_location": "L320",
-      "id": "bool",
-      "community": 0,
+      "id": "scraper_py_bool",
+      "community": 98,
       "norm_label": "bool"
     },
     {
@@ -585,7 +783,7 @@
       "source_file": "scraper.py",
       "source_location": "L325",
       "id": "scraper_scroll_feed",
-      "community": 0,
+      "community": 98,
       "norm_label": "_scroll_feed()"
     },
     {
@@ -594,7 +792,7 @@
       "source_file": "scraper.py",
       "source_location": "L358",
       "id": "scraper_scrape_one_url",
-      "community": 0,
+      "community": 116,
       "norm_label": "_scrape_one_url()"
     },
     {
@@ -603,7 +801,7 @@
       "source_file": "scraper.py",
       "source_location": "L386",
       "id": "scraper_scrape",
-      "community": 0,
+      "community": 117,
       "norm_label": "scrape()"
     },
     {
@@ -612,7 +810,7 @@
       "source_file": "scraper.py",
       "source_location": "L393",
       "id": "scraper_scrape_multi",
-      "community": 0,
+      "community": 116,
       "norm_label": "scrape_multi()"
     },
     {
@@ -621,7 +819,7 @@
       "source_file": "scraper.py",
       "source_location": "L1",
       "id": "scraper_rationale_1",
-      "community": 0,
+      "community": 115,
       "norm_label": "automation logic: playwright-driven scraping with stealth."
     },
     {
@@ -630,7 +828,7 @@
       "source_file": "scraper.py",
       "source_location": "L30",
       "id": "scraper_rationale_30",
-      "community": 0,
+      "community": 120,
       "norm_label": "return the browser engine to use.      precedence: playwright_browser env var >"
     },
     {
@@ -639,7 +837,7 @@
       "source_file": "scraper.py",
       "source_location": "L49",
       "id": "scraper_rationale_49",
-      "community": 0,
+      "community": 117,
       "norm_label": "return absolute path to browser binary, or none to use playwright-managed binary"
     },
     {
@@ -648,7 +846,7 @@
       "source_file": "scraper.py",
       "source_location": "L68",
       "id": "scraper_rationale_68",
-      "community": 0,
+      "community": 117,
       "norm_label": "launch the appropriate headless browser based on engine selection."
     },
     {
@@ -657,7 +855,7 @@
       "source_file": "scraper.py",
       "source_location": "L190",
       "id": "scraper_rationale_190",
-      "community": 0,
+      "community": 115,
       "norm_label": "parse inner html of one business card node into a field dict.      returns a dic"
     },
     {
@@ -666,7 +864,7 @@
       "source_file": "scraper.py",
       "source_location": "L230",
       "id": "scraper_rationale_230",
-      "community": 0,
+      "community": 116,
       "norm_label": "collect outer html strings for each unique business card in the feed.      queri"
     },
     {
@@ -675,7 +873,7 @@
       "source_file": "scraper.py",
       "source_location": "L276",
       "id": "scraper_rationale_276",
-      "community": 0,
+      "community": 120,
       "norm_label": "create and stealth-configure a browsercontext."
     },
     {
@@ -684,7 +882,7 @@
       "source_file": "scraper.py",
       "source_location": "L287",
       "id": "scraper_rationale_287",
-      "community": 0,
+      "community": 119,
       "norm_label": "detect and click 'accept all' consent button if present."
     },
     {
@@ -693,7 +891,7 @@
       "source_file": "scraper.py",
       "source_location": "L299",
       "id": "scraper_rationale_299",
-      "community": 0,
+      "community": 119,
       "norm_label": "abort image and font requests to reduce bandwidth."
     },
     {
@@ -702,7 +900,7 @@
       "source_file": "scraper.py",
       "source_location": "L307",
       "id": "scraper_rationale_307",
-      "community": 0,
+      "community": 98,
       "norm_label": "return .first locator for the maps results feed container.      raises runtimeer"
     },
     {
@@ -711,7 +909,7 @@
       "source_file": "scraper.py",
       "source_location": "L321",
       "id": "scraper_rationale_321",
-      "community": 0,
+      "community": 98,
       "norm_label": "return true if the maps end-of-results notice is present in the dom."
     },
     {
@@ -720,7 +918,7 @@
       "source_file": "scraper.py",
       "source_location": "L326",
       "id": "scraper_rationale_326",
-      "community": 0,
+      "community": 98,
       "norm_label": "scroll the maps results feed until all results load.      stops when 'end of lis"
     },
     {
@@ -729,7 +927,7 @@
       "source_file": "scraper.py",
       "source_location": "L364",
       "id": "scraper_rationale_364",
-      "community": 0,
+      "community": 116,
       "norm_label": "run one full scrape cycle against `url` on an existing browser.      creates a f"
     },
     {
@@ -738,7 +936,7 @@
       "source_file": "scraper.py",
       "source_location": "L387",
       "id": "scraper_rationale_387",
-      "community": 0,
+      "community": 117,
       "norm_label": "scrape `url` and return list of result dicts."
     },
     {
@@ -747,7 +945,7 @@
       "source_file": "scraper.py",
       "source_location": "L400",
       "id": "scraper_rationale_400",
-      "community": 0,
+      "community": 116,
       "norm_label": "scrape multiple sub-region queries and return deduplicated results.      each qu"
     },
     {
@@ -1095,7 +1293,7 @@
       "label": "TestAdaptLead",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "id": "tests_test_app_helpers_testadaptlead",
       "community": 1,
       "norm_label": "testadaptlead"
@@ -1104,7 +1302,7 @@
       "label": ".test_generates_google_id_from_name_and_phone()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "id": "tests_test_app_helpers_testadaptlead_test_generates_google_id_from_name_and_phone",
       "community": 1,
       "norm_label": ".test_generates_google_id_from_name_and_phone()"
@@ -1113,7 +1311,7 @@
       "label": ".test_maps_reviews_to_reviews_count()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L20",
+      "source_location": "L21",
       "id": "tests_test_app_helpers_testadaptlead_test_maps_reviews_to_reviews_count",
       "community": 1,
       "norm_label": ".test_maps_reviews_to_reviews_count()"
@@ -1122,7 +1320,7 @@
       "label": ".test_address_and_category_are_empty()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L24",
+      "source_location": "L25",
       "id": "tests_test_app_helpers_testadaptlead_test_address_and_category_are_empty",
       "community": 1,
       "norm_label": ".test_address_and_category_are_empty()"
@@ -1131,7 +1329,7 @@
       "label": ".test_missing_fields_default_to_empty_string()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L30",
+      "source_location": "L31",
       "id": "tests_test_app_helpers_testadaptlead_test_missing_fields_default_to_empty_string",
       "community": 1,
       "norm_label": ".test_missing_fields_default_to_empty_string()"
@@ -1140,7 +1338,7 @@
       "label": ".test_google_id_deterministic_for_same_input()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "id": "tests_test_app_helpers_testadaptlead_test_google_id_deterministic_for_same_input",
       "community": 1,
       "norm_label": ".test_google_id_deterministic_for_same_input()"
@@ -1149,7 +1347,7 @@
       "label": "TestDfToCsvBytes",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L41",
+      "source_location": "L42",
       "id": "tests_test_app_helpers_testdftocsvbytes",
       "community": 1,
       "norm_label": "testdftocsvbytes"
@@ -1158,7 +1356,7 @@
       "label": "._sample_df()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L42",
+      "source_location": "L43",
       "id": "tests_test_app_helpers_testdftocsvbytes_sample_df",
       "community": 1,
       "norm_label": "._sample_df()"
@@ -1167,7 +1365,7 @@
       "label": ".test_returns_bytes()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "id": "tests_test_app_helpers_testdftocsvbytes_test_returns_bytes",
       "community": 1,
       "norm_label": ".test_returns_bytes()"
@@ -1176,7 +1374,7 @@
       "label": ".test_csv_contains_header()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L48",
+      "source_location": "L49",
       "id": "tests_test_app_helpers_testdftocsvbytes_test_csv_contains_header",
       "community": 1,
       "norm_label": ".test_csv_contains_header()"
@@ -1185,7 +1383,7 @@
       "label": ".test_csv_contains_data_rows()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L53",
+      "source_location": "L54",
       "id": "tests_test_app_helpers_testdftocsvbytes_test_csv_contains_data_rows",
       "community": 1,
       "norm_label": ".test_csv_contains_data_rows()"
@@ -1194,7 +1392,7 @@
       "label": "TestDfToExcelBytes",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L59",
+      "source_location": "L60",
       "id": "tests_test_app_helpers_testdftoexcelbytes",
       "community": 1,
       "norm_label": "testdftoexcelbytes"
@@ -1203,7 +1401,7 @@
       "label": "._sample_df()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L60",
+      "source_location": "L61",
       "id": "tests_test_app_helpers_testdftoexcelbytes_sample_df",
       "community": 1,
       "norm_label": "._sample_df()"
@@ -1212,7 +1410,7 @@
       "label": ".test_returns_bytes()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L63",
+      "source_location": "L64",
       "id": "tests_test_app_helpers_testdftoexcelbytes_test_returns_bytes",
       "community": 1,
       "norm_label": ".test_returns_bytes()"
@@ -1221,7 +1419,7 @@
       "label": ".test_bytes_start_with_xlsx_magic()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L66",
+      "source_location": "L67",
       "id": "tests_test_app_helpers_testdftoexcelbytes_test_bytes_start_with_xlsx_magic",
       "community": 1,
       "norm_label": ".test_bytes_start_with_xlsx_magic()"
@@ -1230,10 +1428,82 @@
       "label": ".test_roundtrip_preserves_columns()",
       "file_type": "code",
       "source_file": "tests/test_app_helpers.py",
-      "source_location": "L71",
+      "source_location": "L72",
       "id": "tests_test_app_helpers_testdftoexcelbytes_test_roundtrip_preserves_columns",
       "community": 1,
       "norm_label": ".test_roundtrip_preserves_columns()"
+    },
+    {
+      "label": "TestApplyEditorChanges",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L80",
+      "id": "tests_test_app_helpers_testapplyeditorchanges",
+      "community": 1,
+      "norm_label": "testapplyeditorchanges"
+    },
+    {
+      "label": ".tmp_db()",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L82",
+      "id": "tests_test_app_helpers_testapplyeditorchanges_tmp_db",
+      "community": 1,
+      "norm_label": ".tmp_db()"
+    },
+    {
+      "label": "._df()",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L90",
+      "id": "tests_test_app_helpers_testapplyeditorchanges_df",
+      "community": 1,
+      "norm_label": "._df()"
+    },
+    {
+      "label": ".test_edit_persists()",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L93",
+      "id": "tests_test_app_helpers_testapplyeditorchanges_test_edit_persists",
+      "community": 1,
+      "norm_label": ".test_edit_persists()"
+    },
+    {
+      "label": ".test_delete_persists()",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L100",
+      "id": "tests_test_app_helpers_testapplyeditorchanges_test_delete_persists",
+      "community": 1,
+      "norm_label": ".test_delete_persists()"
+    },
+    {
+      "label": ".test_added_row_inherits_query_label()",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L106",
+      "id": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_inherits_query_label",
+      "community": 1,
+      "norm_label": ".test_added_row_inherits_query_label()"
+    },
+    {
+      "label": ".test_added_row_without_name_skipped()",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L113",
+      "id": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_without_name_skipped",
+      "community": 1,
+      "norm_label": ".test_added_row_without_name_skipped()"
+    },
+    {
+      "label": ".test_no_changes_returns_false()",
+      "file_type": "code",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L119",
+      "id": "tests_test_app_helpers_testapplyeditorchanges_test_no_changes_returns_false",
+      "community": 1,
+      "norm_label": ".test_no_changes_returns_false()"
     },
     {
       "label": "test_app_threading.py",
@@ -1423,6 +1693,69 @@
       "id": "tests_test_database_test_count_leads_ignores_duplicates",
       "community": 75,
       "norm_label": "test_count_leads_ignores_duplicates()"
+    },
+    {
+      "label": "_seed()",
+      "file_type": "code",
+      "source_file": "tests/test_database.py",
+      "source_location": "L40",
+      "id": "tests_test_database_seed",
+      "community": 75,
+      "norm_label": "_seed()"
+    },
+    {
+      "label": "test_update_lead_changes_editable_fields()",
+      "file_type": "code",
+      "source_file": "tests/test_database.py",
+      "source_location": "L48",
+      "id": "tests_test_database_test_update_lead_changes_editable_fields",
+      "community": 75,
+      "norm_label": "test_update_lead_changes_editable_fields()"
+    },
+    {
+      "label": "test_update_lead_ignores_unknown_columns()",
+      "file_type": "code",
+      "source_file": "tests/test_database.py",
+      "source_location": "L57",
+      "id": "tests_test_database_test_update_lead_ignores_unknown_columns",
+      "community": 75,
+      "norm_label": "test_update_lead_ignores_unknown_columns()"
+    },
+    {
+      "label": "test_delete_lead_removes_single_row()",
+      "file_type": "code",
+      "source_file": "tests/test_database.py",
+      "source_location": "L65",
+      "id": "tests_test_database_test_delete_lead_removes_single_row",
+      "community": 75,
+      "norm_label": "test_delete_lead_removes_single_row()"
+    },
+    {
+      "label": "test_delete_by_query_removes_matching_group()",
+      "file_type": "code",
+      "source_file": "tests/test_database.py",
+      "source_location": "L73",
+      "id": "tests_test_database_test_delete_by_query_removes_matching_group",
+      "community": 75,
+      "norm_label": "test_delete_by_query_removes_matching_group()"
+    },
+    {
+      "label": "test_delete_by_query_unlabeled_matches_empty_query()",
+      "file_type": "code",
+      "source_file": "tests/test_database.py",
+      "source_location": "L82",
+      "id": "tests_test_database_test_delete_by_query_unlabeled_matches_empty_query",
+      "community": 75,
+      "norm_label": "test_delete_by_query_unlabeled_matches_empty_query()"
+    },
+    {
+      "label": "test_delete_all_empties_table()",
+      "file_type": "code",
+      "source_file": "tests/test_database.py",
+      "source_location": "L88",
+      "id": "tests_test_database_test_delete_all_empties_table",
+      "community": 75,
+      "norm_label": "test_delete_all_empties_table()"
     },
     {
       "label": "test_scraper.py",
@@ -3743,7 +4076,7 @@
       "source_file": "tests/test_scraper_delay.py",
       "source_location": "L1",
       "id": "tests_test_scraper_delay",
-      "community": 0,
+      "community": 118,
       "norm_label": "test_scraper_delay.py"
     },
     {
@@ -3752,7 +4085,7 @@
       "source_file": "tests/test_scraper_delay.py",
       "source_location": "L5",
       "id": "tests_test_scraper_delay_make_mock_pw",
-      "community": 0,
+      "community": 118,
       "norm_label": "_make_mock_pw()"
     },
     {
@@ -3761,7 +4094,7 @@
       "source_file": "tests/test_scraper_delay.py",
       "source_location": "L18",
       "id": "tests_test_scraper_delay_test_delay_preset_slow_uses_wider_range",
-      "community": 0,
+      "community": 118,
       "norm_label": "test_delay_preset_slow_uses_wider_range()"
     },
     {
@@ -3770,7 +4103,7 @@
       "source_file": "tests/test_scraper_delay.py",
       "source_location": "L28",
       "id": "tests_test_scraper_delay_test_delay_preset_fast_uses_shorter_range",
-      "community": 0,
+      "community": 118,
       "norm_label": "test_delay_preset_fast_uses_shorter_range()"
     },
     {
@@ -3779,7 +4112,7 @@
       "source_file": "tests/test_scraper_delay.py",
       "source_location": "L38",
       "id": "tests_test_scraper_delay_test_delay_preset_normal_is_default",
-      "community": 0,
+      "community": 118,
       "norm_label": "test_delay_preset_normal_is_default()"
     },
     {
@@ -3788,7 +4121,7 @@
       "source_file": "tests/test_scraper_delay.py",
       "source_location": "L48",
       "id": "tests_test_scraper_delay_test_delay_preset_unknown_falls_back_to_normal",
-      "community": 0,
+      "community": 118,
       "norm_label": "test_delay_preset_unknown_falls_back_to_normal()"
     },
     {
@@ -22080,6 +22413,87 @@
       "norm_label": "acceptance checklist"
     },
     {
+      "label": "Per-query tabs (+ an All tab). Tab labels are stable (no counts) so the     sele",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L350",
+      "community": 1,
+      "norm_label": "per-query tabs (+ an all tab). tab labels are stable (no counts) so the     sele",
+      "id": "app_rationale_350"
+    },
+    {
+      "label": "Background thread. Feeds out_q; row_callback handles DB write + counter.      Ru",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L433",
+      "community": 1,
+      "norm_label": "background thread. feeds out_q; row_callback handles db write + counter.      ru",
+      "id": "app_rationale_433"
+    },
+    {
+      "label": "Map scraper result keys to database.save_lead expected keys.",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L22",
+      "community": 1,
+      "norm_label": "map scraper result keys to database.save_lead expected keys.",
+      "id": "app_rationale_22"
+    },
+    {
+      "label": "Drain all available messages from out_q into state. Non-blocking.      Message s",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L48",
+      "community": 1,
+      "norm_label": "drain all available messages from out_q into state. non-blocking.      message s",
+      "id": "app_rationale_48"
+    },
+    {
+      "label": "Background thread. Feeds out_q; row_callback handles DB write + counter.      Ru",
+      "file_type": "rationale",
+      "source_file": "app.py",
+      "source_location": "L244",
+      "community": 1,
+      "norm_label": "background thread. feeds out_q; row_callback handles db write + counter.      ru",
+      "id": "app_rationale_244"
+    },
+    {
+      "label": "Create leads table if it doesn't exist. Idempotent.",
+      "file_type": "rationale",
+      "source_file": "database.py",
+      "source_location": "L33",
+      "community": 75,
+      "norm_label": "create leads table if it doesn't exist. idempotent.",
+      "id": "database_rationale_33"
+    },
+    {
+      "label": "Insert a lead with deduplication on google_id. Silently skips duplicates.",
+      "file_type": "rationale",
+      "source_file": "database.py",
+      "source_location": "L39",
+      "community": 75,
+      "norm_label": "insert a lead with deduplication on google_id. silently skips duplicates.",
+      "id": "database_rationale_39"
+    },
+    {
+      "label": "Return all leads as a pandas DataFrame.",
+      "file_type": "rationale",
+      "source_file": "database.py",
+      "source_location": "L56",
+      "community": 75,
+      "norm_label": "return all leads as a pandas dataframe.",
+      "id": "database_rationale_56"
+    },
+    {
+      "label": "bool",
+      "file_type": "code",
+      "source_file": "scraper.py",
+      "source_location": "L320",
+      "community": 98,
+      "norm_label": "bool",
+      "id": "bool"
+    },
+    {
       "label": "Background thread. Feeds out_q; row_callback handles DB write + counter.      Ru",
       "file_type": "rationale",
       "source_file": "app.py",
@@ -22093,7 +22507,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L226",
-      "community": 0,
+      "community": 116,
       "norm_label": "collect outer html strings for each unique business card in the feed.      queri",
       "id": "scraper_rationale_226"
     },
@@ -22102,7 +22516,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L264",
-      "community": 0,
+      "community": 120,
       "norm_label": "create and stealth-configure a browsercontext.",
       "id": "scraper_rationale_264"
     },
@@ -22111,7 +22525,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L275",
-      "community": 0,
+      "community": 119,
       "norm_label": "detect and click 'accept all' consent button if present.",
       "id": "scraper_rationale_275"
     },
@@ -22120,7 +22534,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L295",
-      "community": 0,
+      "community": 98,
       "norm_label": "return .first locator for the maps results feed container.      raises runtimeer",
       "id": "scraper_rationale_295"
     },
@@ -22129,7 +22543,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L309",
-      "community": 0,
+      "community": 98,
       "norm_label": "return true if the maps end-of-results notice is present in the dom.",
       "id": "scraper_rationale_309"
     },
@@ -22138,7 +22552,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L314",
-      "community": 0,
+      "community": 98,
       "norm_label": "scroll the maps results feed until all results load.      stops when 'end of lis",
       "id": "scraper_rationale_314"
     },
@@ -22147,7 +22561,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L347",
-      "community": 0,
+      "community": 116,
       "norm_label": "run one full scrape cycle against `url` on an existing browser.      creates a f",
       "id": "scraper_rationale_347"
     },
@@ -22156,7 +22570,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L367",
-      "community": 0,
+      "community": 117,
       "norm_label": "scrape `url` and return list of result dicts.",
       "id": "scraper_rationale_367"
     },
@@ -22165,7 +22579,7 @@
       "file_type": "rationale",
       "source_file": "scraper.py",
       "source_location": "L380",
-      "community": 0,
+      "community": 116,
       "norm_label": "scrape multiple sub-region queries and return deduplicated results.      each qu",
       "id": "scraper_rationale_380"
     }
@@ -22416,6 +22830,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_apply_editor_changes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
       "source_location": "L37",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -22446,11 +22870,61 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
+      "source_location": "L245",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app",
+      "target": "app_hero"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app",
+      "target": "app_leads_table"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app",
+      "target": "app_query_of"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L349",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app",
+      "target": "app_render_results"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
       "source_location": "L233",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "app",
       "target": "app_run_scrape"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app",
+      "target": "app_slug"
     },
     {
       "relation": "contains",
@@ -22528,6 +23002,28 @@
       "target": "app"
     },
     {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_adapt_lead",
+      "target": "app_py_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L354",
+      "weight": 1.0,
+      "source": "app_apply_editor_changes",
+      "target": "app_adapt_lead",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
@@ -22535,6 +23031,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "app_rationale_22",
+      "target": "app_adapt_lead"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_rationale_26",
       "target": "app_adapt_lead"
     },
     {
@@ -22608,6 +23114,61 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "source": "app_apply_editor_changes",
+      "target": "app_py_str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_leads_table",
+      "target": "app_py_str"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_query_of",
+      "target": "app_py_str"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L233",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_run_scrape",
+      "target": "app_py_str"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_slug",
+      "target": "app_py_str"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
       "source_location": "L37",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -22624,6 +23185,17 @@
       "confidence_score": 1.0,
       "source": "app_df_to_csv_bytes",
       "target": "bytes"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L339",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_leads_table",
+      "target": "app_df_to_csv_bytes"
     },
     {
       "relation": "imports",
@@ -22674,10 +23246,43 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "source": "app_apply_editor_changes",
+      "target": "app_py_dataframe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
       "source_location": "L41",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "app_df_to_excel_bytes",
+      "target": "app_py_dataframe"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_leads_table",
+      "target": "app_py_dataframe"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L349",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_render_results",
       "target": "app_py_dataframe"
     },
     {
@@ -22736,6 +23341,48 @@
       "target": "app_df_to_excel_bytes"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_rationale_57",
+      "target": "app_slug"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L372",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_render_results",
+      "target": "app_slug"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_drain_queue",
+      "target": "app_query_of"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_rationale_62",
+      "target": "app_query_of"
+    },
+    {
       "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
@@ -22754,6 +23401,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "app_rationale_48",
+      "target": "app_drain_queue"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L67",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_rationale_67",
       "target": "app_drain_queue"
     },
     {
@@ -22911,6 +23568,177 @@
       "target": "queue"
     },
     {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "source": "app_apply_editor_changes",
+      "target": "app_py_bool",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L385",
+      "weight": 1.0,
+      "source": "app_leads_table",
+      "target": "app_apply_editor_changes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L325",
+      "weight": 1.0,
+      "source": "app_rationale_325",
+      "target": "app_apply_editor_changes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers",
+      "target": "app_apply_editor_changes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_inherits_query_label",
+      "target": "app_apply_editor_changes"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_without_name_skipped",
+      "target": "app_apply_editor_changes"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_delete_persists",
+      "target": "app_apply_editor_changes"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_edit_persists",
+      "target": "app_apply_editor_changes"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_no_changes_returns_false",
+      "target": "app_apply_editor_changes"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_leads_table",
+      "target": "app_py_bool"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L325",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_rationale_325",
+      "target": "app_leads_table"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L361",
+      "weight": 1.0,
+      "source": "app_rationale_361",
+      "target": "app_leads_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L368",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_render_results",
+      "target": "app_leads_table"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L350",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_rationale_350",
+      "target": "app_render_results"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L439",
+      "weight": 1.0,
+      "source": "app_rationale_439",
+      "target": "app_render_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L418",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_status_panel",
+      "target": "app_render_results"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app.py",
@@ -22926,7 +23754,27 @@
       "source_file": "app.py",
       "source_location": "L244",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_rationale_244",
+      "target": "app_run_scrape"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L433",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_rationale_433",
+      "target": "app_run_scrape"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L525",
+      "weight": 1.0,
+      "source": "app_rationale_525",
       "target": "app_run_scrape",
       "confidence_score": 1.0
     },
@@ -22942,17 +23790,6 @@
       "target": "app_py_int"
     },
     {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "app.py",
-      "source_location": "L233",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "app_run_scrape",
-      "target": "app_py_str"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "database.py",
@@ -22961,6 +23798,36 @@
       "confidence_score": 1.0,
       "source": "database",
       "target": "database_count_leads"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "database",
+      "target": "database_delete_all",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "database",
+      "target": "database_delete_by_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "database",
+      "target": "database_delete_lead",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -22993,6 +23860,16 @@
       "target": "database_save_lead"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "database",
+      "target": "database_update_lead",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "database.py",
@@ -23001,6 +23878,17 @@
       "confidence_score": 1.0,
       "source": "database_rationale_1",
       "target": "database"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers",
+      "target": "database",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -23027,10 +23915,30 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "database.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "database_rationale_34",
+      "target": "database_initialize_db"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
       "source_location": "L39",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "database_rationale_39",
+      "target": "database_save_lead"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "database_rationale_44",
       "target": "database_save_lead"
     },
     {
@@ -23055,6 +23963,16 @@
       "target": "database_fetch_all_leads_as_dataframe"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "database_rationale_62",
+      "target": "database_fetch_all_leads_as_dataframe"
+    },
+    {
       "relation": "references",
       "context": "return_type",
       "confidence": "EXTRACTED",
@@ -23074,6 +23992,100 @@
       "confidence_score": 1.0,
       "source": "database_rationale_62",
       "target": "database_count_leads"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "database_rationale_68",
+      "target": "database_count_leads"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "database_delete_by_query",
+      "target": "database_py_int",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "database_rationale_81",
+      "target": "database_update_lead",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "database_update_lead",
+      "target": "database_py_str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "database_delete_by_query",
+      "target": "database_py_str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "database_delete_lead",
+      "target": "database_py_str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "database_rationale_96",
+      "target": "database_delete_lead",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "database_rationale_102",
+      "target": "database_delete_by_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "database.py",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "database_rationale_116",
+      "target": "database_delete_all",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -23619,9 +24631,9 @@
       "source_file": "scraper.py",
       "source_location": "L265",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_collect_nodes",
-      "target": "scraper_parse_business_node",
-      "confidence_score": 1.0
+      "target": "scraper_parse_business_node"
     },
     {
       "relation": "rationale_for",
@@ -23671,9 +24683,9 @@
       "source_file": "scraper.py",
       "source_location": "L230",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_230",
-      "target": "scraper_collect_nodes",
-      "confidence_score": 1.0
+      "target": "scraper_collect_nodes"
     },
     {
       "relation": "calls",
@@ -23746,9 +24758,9 @@
       "source_file": "scraper.py",
       "source_location": "L276",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_276",
-      "target": "scraper_build_context",
-      "confidence_score": 1.0
+      "target": "scraper_build_context"
     },
     {
       "relation": "calls",
@@ -23777,9 +24789,9 @@
       "source_file": "scraper.py",
       "source_location": "L287",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_287",
-      "target": "scraper_dismiss_consent",
-      "confidence_score": 1.0
+      "target": "scraper_dismiss_consent"
     },
     {
       "relation": "calls",
@@ -23808,9 +24820,9 @@
       "source_file": "scraper.py",
       "source_location": "L299",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_299",
-      "target": "scraper_block_media",
-      "confidence_score": 1.0
+      "target": "scraper_block_media"
     },
     {
       "relation": "calls",
@@ -23839,9 +24851,9 @@
       "source_file": "scraper.py",
       "source_location": "L307",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_307",
-      "target": "scraper_locate_feed",
-      "confidence_score": 1.0
+      "target": "scraper_locate_feed"
     },
     {
       "relation": "calls",
@@ -23866,6 +24878,17 @@
       "target": "bool"
     },
     {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "scraper.py",
+      "source_location": "L320",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scraper_end_of_list_visible",
+      "target": "scraper_py_bool"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "scraper.py",
@@ -23881,9 +24904,9 @@
       "source_file": "scraper.py",
       "source_location": "L321",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_321",
-      "target": "scraper_end_of_list_visible",
-      "confidence_score": 1.0
+      "target": "scraper_end_of_list_visible"
     },
     {
       "relation": "calls",
@@ -23912,9 +24935,9 @@
       "source_file": "scraper.py",
       "source_location": "L326",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_326",
-      "target": "scraper_scroll_feed",
-      "confidence_score": 1.0
+      "target": "scraper_scroll_feed"
     },
     {
       "relation": "calls",
@@ -23943,9 +24966,9 @@
       "source_file": "scraper.py",
       "source_location": "L364",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_364",
-      "target": "scraper_scrape_one_url",
-      "confidence_score": 1.0
+      "target": "scraper_scrape_one_url"
     },
     {
       "relation": "calls",
@@ -23985,9 +25008,9 @@
       "source_file": "scraper.py",
       "source_location": "L387",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_387",
-      "target": "scraper_scrape",
-      "confidence_score": 1.0
+      "target": "scraper_scrape"
     },
     {
       "relation": "rationale_for",
@@ -24005,9 +25028,9 @@
       "source_file": "scraper.py",
       "source_location": "L400",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scraper_rationale_400",
-      "target": "scraper_scrape_multi",
-      "confidence_score": 1.0
+      "target": "scraper_scrape_multi"
     },
     {
       "relation": "contains",
@@ -24353,6 +25376,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_app_helpers.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers",
+      "target": "tests_test_app_helpers_testapplyeditorchanges",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
       "source_location": "L41",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -24564,6 +25597,131 @@
       "confidence_score": 1.0,
       "source": "tests_test_app_helpers_testdftoexcelbytes_test_roundtrip_preserves_columns",
       "target": "tests_test_app_helpers_testdftoexcelbytes_sample_df"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_df",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_inherits_query_label",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L113",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_without_name_skipped",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_test_delete_persists",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_test_edit_persists",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_test_no_changes_returns_false",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_tmp_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_inherits_query_label",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_df",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_added_row_without_name_skipped",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_df",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_delete_persists",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_df",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_edit_persists",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_df",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_helpers.py",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "tests_test_app_helpers_testapplyeditorchanges_test_no_changes_returns_false",
+      "target": "tests_test_app_helpers_testapplyeditorchanges_df",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -24829,6 +25987,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_database.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "tests_test_database",
+      "target": "tests_test_database_seed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
       "source_location": "L28",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -24859,11 +26027,137 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_database.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_test_database",
+      "target": "tests_test_database_test_delete_all_empties_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "tests_test_database",
+      "target": "tests_test_database_test_delete_by_query_removes_matching_group",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "tests_test_database",
+      "target": "tests_test_database_test_delete_by_query_unlabeled_matches_empty_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "tests_test_database",
+      "target": "tests_test_database_test_delete_lead_removes_single_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "tests_test_database",
+      "target": "tests_test_database_test_update_lead_changes_editable_fields",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "tests_test_database",
+      "target": "tests_test_database_test_update_lead_ignores_unknown_columns",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
       "source_location": "L7",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_database",
       "target": "tests_test_database_tmp_db"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "tests_test_database_test_delete_all_empties_table",
+      "target": "tests_test_database_seed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "tests_test_database_test_delete_by_query_removes_matching_group",
+      "target": "tests_test_database_seed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "tests_test_database_test_delete_by_query_unlabeled_matches_empty_query",
+      "target": "tests_test_database_seed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "tests_test_database_test_delete_lead_removes_single_row",
+      "target": "tests_test_database_seed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "tests_test_database_test_update_lead_changes_editable_fields",
+      "target": "tests_test_database_seed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_database.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "tests_test_database_test_update_lead_ignores_unknown_columns",
+      "target": "tests_test_database_seed",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -47520,5 +48814,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0fbf7508ea3cf6434f05faea774f04cdc3ec1693"
+  "built_at_commit": "bf4651844f7997adbf76243f734c9bb97b7c7c42"
 }
