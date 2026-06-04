@@ -30,6 +30,11 @@ _PROFILE_DELAY_MIN = 2.0
 _PROFILE_DELAY_MAX = 5.0
 _INTER_QUERY_DELAY_MIN = 5.0
 _INTER_QUERY_DELAY_MAX = 15.0
+_SPEED_PRESETS: dict[str, tuple[float, float]] = {
+    "slow":   (15.0, 30.0),
+    "normal": (_INTER_QUERY_DELAY_MIN, _INTER_QUERY_DELAY_MAX),
+    "fast":   (1.5,  5.0),
+}
 _FEED_SELECTORS = ('div[role="feed"]', '[aria-label*="Results"]')
 _END_OF_LIST_TEXT = "You've reached the end of the list"
 _PLACE_LINK_SELECTOR = 'a[href*="/maps/place/"]'
@@ -277,7 +282,7 @@ def scrape(url: str) -> list[dict]:
             return _scrape_one_url(browser, url)
 
 
-def scrape_multi(queries: list[str]) -> list[dict]:
+def scrape_multi(queries: list[str], delay_preset: str = "normal") -> list[dict]:
     """Scrape multiple sub-region queries and return deduplicated results.
 
     Each query runs in its own fresh BrowserContext so cookies and
@@ -298,9 +303,10 @@ def scrape_multi(queries: list[str]) -> list[dict]:
                         seen_keys.add(key)
                         results.append(record)
                 if i < len(queries) - 1:
-                    time.sleep(
-                        random.uniform(_INTER_QUERY_DELAY_MIN, _INTER_QUERY_DELAY_MAX)
+                    delay_min, delay_max = _SPEED_PRESETS.get(
+                        delay_preset, _SPEED_PRESETS["normal"]
                     )
+                    time.sleep(random.uniform(delay_min, delay_max))
     return results
 
 

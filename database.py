@@ -58,6 +58,13 @@ def fetch_all_leads_as_dataframe() -> pd.DataFrame:
         return pd.read_sql_query("SELECT * FROM leads", conn)
 
 
+def count_leads() -> int:
+    """Return total number of leads stored in the database."""
+    with sqlite3.connect(DB_PATH) as conn:
+        row = conn.execute("SELECT COUNT(*) FROM leads").fetchone()
+        return row[0] if row else 0
+
+
 if __name__ == "__main__":
     initialize_db()
     sample = {
