@@ -3,6 +3,7 @@
 > import re
 > import random
 > import time
+> from urllib.parse import quote_plus
 > from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 > from playwright_stealth import Stealth
 > from bs4 import BeautifulSoup
@@ -25,6 +26,10 @@
 > _SCROLL_JITTER_MIN = 1.5
 > _SCROLL_JITTER_MAX = 3.5
 > _SCROLL_STALE_LIMIT = 3
+> _PROFILE_DELAY_MIN = 2.0
+> _PROFILE_DELAY_MAX = 5.0
+> _INTER_QUERY_DELAY_MIN = 5.0
+> _INTER_QUERY_DELAY_MAX = 15.0
 > _FEED_SELECTORS = ('div[role="feed"]', '[aria-label*="Results"]')
 > _END_OF_LIST_TEXT = "You've reached the end of the list"
 > _PLACE_LINK_SELECTOR = 'a[href*="/maps/place/"]'
@@ -37,6 +42,10 @@
 >     r'|\d{4,5}[\s\-]\d{5,6}'
 >     r')'
 > )
+  
+  
+> def _query_to_url(query: str) -> str:
+>     return f"{_MAPS_URL}/search/{quote_plus(query)}"
   
   
 > def _extract_name(soup) -> str:
@@ -125,8 +134,8 @@
 >             'phone': _extract_phone(soup),
 >             'website': _extract_website(soup),
 >         }
-!     except Exception:
-!         return {'name': '', 'rating': '', 'reviews': '', 'phone': '', 'website': ''}
+>     except Exception:
+>         return {'name': '', 'rating': '', 'reviews': '', 'phone': '', 'website': ''}
   
   
 > def _collect_nodes(page) -> list[str]:
@@ -158,6 +167,7 @@
 >                 '(el) => (el.closest("[jsaction]") || el.parentElement).innerHTML'
 >             )
 >             results.append(html)
+>             time.sleep(random.uniform(_PROFILE_DELAY_MIN, _PROFILE_DELAY_MAX))
 >         except Exception:
 >             continue
   
@@ -243,18 +253,54 @@
 >             prev_height = current_height
   
   
+> def _scrape_one_url(browser, url: str) -> list[dict]:
+>     """Run one full scrape cycle against `url` on an existing browser.
+  
+>     Creates a fresh BrowserContext (clears cookies/storage), navigates,
+>     scrolls, collects nodes, and parses results.  The context is closed
+>     when the with-block exits regardless of errors.
+>     """
+>     with _build_context(browser) as ctx:
+>         page = ctx.new_page()
+>         _block_media(page)
+>         page.goto(url, wait_until="networkidle")
+>         _dismiss_consent(page)
+>         _scroll_feed(page)
+>         nodes_html = _collect_nodes(page)
+>     return [r for r in (_parse_business_node(h) for h in nodes_html) if r.get('name')]
+  
+  
 > def scrape(url: str) -> list[dict]:
 >     """Scrape `url` and return list of result dicts."""
 >     with sync_playwright() as p:
 >         with p.chromium.launch(headless=True, args=_LAUNCH_ARGS) as browser:
->             with _build_context(browser) as context:
->                 page = context.new_page()
->                 _block_media(page)
->                 page.goto(url, wait_until="networkidle")
->                 _dismiss_consent(page)
->                 _scroll_feed(page)
->                 nodes_html = _collect_nodes(page)
->     results = [r for r in (_parse_business_node(h) for h in nodes_html) if r.get('name')]
+>             return _scrape_one_url(browser, url)
+  
+  
+> def scrape_multi(queries: list[str]) -> list[dict]:
+>     """Scrape multiple sub-region queries and return deduplicated results.
+  
+>     Each query runs in its own fresh BrowserContext so cookies and
+>     local-storage tracking state are cleared between iterations.
+>     A randomised inter-query delay mimics human pacing between searches.
+>     Results from all queries are merged and deduplicated by name+phone key.
+>     """
+>     seen_keys: set[str] = set()
+>     results: list[dict] = []
+>     with sync_playwright() as p:
+>         with p.chromium.launch(headless=True, args=_LAUNCH_ARGS) as browser:
+>             for i, query in enumerate(queries):
+>                 url = _query_to_url(query)
+>                 batch = _scrape_one_url(browser, url)
+>                 for record in batch:
+>                     key = f"{record.get('name', '')}|{record.get('phone', '')}"
+>                     if key not in seen_keys:
+>                         seen_keys.add(key)
+>                         results.append(record)
+>                 if i < len(queries) - 1:
+>                     time.sleep(
+>                         random.uniform(_INTER_QUERY_DELAY_MIN, _INTER_QUERY_DELAY_MAX)
+>                     )
 >     return results
   
   
