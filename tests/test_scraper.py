@@ -293,6 +293,39 @@ class TestProfileDelayConstants:
         assert scraper._INTER_QUERY_DELAY_MIN < scraper._INTER_QUERY_DELAY_MAX
 
 
+class TestQueryToUrl:
+    """Tests for _query_to_url helper."""
+
+    def test_returns_maps_search_url(self):
+        url = scraper._query_to_url('Cafes in New York')
+        assert url.startswith('https://www.google.com/maps/search/')
+
+    def test_uses_maps_url_constant_as_base(self):
+        url = scraper._query_to_url('test')
+        assert url.startswith(scraper._MAPS_URL)
+
+    def test_encodes_spaces_as_plus(self):
+        url = scraper._query_to_url('Coffee Shop')
+        path = url.split('/search/')[1]
+        assert ' ' not in path
+        assert '+' in path or '%20' in path
+
+    def test_encodes_ampersand(self):
+        url = scraper._query_to_url('Bars & Grills NYC')
+        path = url.split('/search/')[1]
+        assert '&' not in path
+
+    def test_full_query_appears_in_url(self):
+        url = scraper._query_to_url('Cafes in Upper East Side NY')
+        assert 'Cafes' in url
+        assert 'Upper' in url
+        assert 'East' in url
+
+    def test_empty_string_returns_base_search_url(self):
+        url = scraper._query_to_url('')
+        assert url == f'{scraper._MAPS_URL}/search/'
+
+
 class TestLocateFeed:
     """Tests for _locate_feed helper."""
 

@@ -3,6 +3,7 @@
 import re
 import random
 import time
+from urllib.parse import quote_plus
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 from playwright_stealth import Stealth
 from bs4 import BeautifulSoup
@@ -41,6 +42,10 @@ _PHONE_REGEX = re.compile(
     r'|\d{4,5}[\s\-]\d{5,6}'
     r')'
 )
+
+
+def _query_to_url(query: str) -> str:
+    return f"{_MAPS_URL}/search/{quote_plus(query)}"
 
 
 def _extract_name(soup) -> str:
