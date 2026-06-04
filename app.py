@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import io
+import queue
 import threading
 from datetime import datetime
 
@@ -43,6 +44,34 @@ def _df_to_excel_bytes(df: pd.DataFrame) -> bytes:
     return buf.getvalue()
 
 
+def _drain_queue(out_q: queue.Queue, state: dict) -> None:
+    """Drain all available messages from out_q into state. Non-blocking.
+
+    Message schema:
+        {"type": "row",   "data": dict}   — increment leads_collected
+        {"type": "log",   "text": str}    — append to log_lines
+        {"type": "error", "text": str}    — set scrape_error
+        {"type": "done"}                  — mark scraping finished, clear queue ref
+    """
+    try:
+        while True:
+            msg = out_q.get_nowait()
+            mtype = msg.get("type")
+            if mtype == "row":
+                state["leads_collected"] = state.get("leads_collected", 0) + 1
+            elif mtype == "log":
+                logs: list = state.get("log_lines", [])
+                logs.append(msg["text"])
+                state["log_lines"] = logs
+            elif mtype == "error":
+                state["scrape_error"] = msg["text"]
+            elif mtype == "done":
+                state["scraping_active"] = False
+                state["scrape_queue"] = None
+    except queue.Empty:
+        pass
+
+
 # ---------------------------------------------------------------------------
 # Session state initialisation
 # ---------------------------------------------------------------------------
@@ -51,6 +80,8 @@ st.session_state.setdefault("scraping_active", False)
 st.session_state.setdefault("leads_collected", 0)
 st.session_state.setdefault("current_query", "—")
 st.session_state.setdefault("scrape_error", None)
+st.session_state.setdefault("scrape_queue", None)
+st.session_state.setdefault("log_lines", [])
 
 # ---------------------------------------------------------------------------
 # DB bootstrap
@@ -105,6 +136,11 @@ with st.sidebar:
 
 @st.fragment(run_every=2 if st.session_state.scraping_active else None)
 def _status_panel() -> None:
+    # Drain any new messages from the background thread.
+    out_q: queue.Queue | None = st.session_state.scrape_queue
+    if out_q is not None:
+        _drain_queue(out_q, st.session_state)
+
     total_in_db = database.count_leads()
 
     with st.container(horizontal=True):
@@ -130,6 +166,16 @@ def _status_panel() -> None:
 
     if st.session_state.scrape_error:
         st.error(f"Scrape error: {st.session_state.scrape_error}")
+
+    # Live log panel — shown only when there are log entries.
+    log_lines: list[str] = st.session_state.get("log_lines", [])
+    if log_lines:
+        with st.expander(
+            ":material/terminal: Live log",
+            expanded=st.session_state.scraping_active,
+        ):
+            log_slot = st.empty()
+            log_slot.code("\n".join(log_lines[-50:]), language=None)
 
 
 _status_panel()
@@ -161,18 +207,28 @@ with st.container(border=True):
 # Background scraper thread
 # ---------------------------------------------------------------------------
 
-def _run_scrape(queries: list[str], preset: str) -> None:
-    """Run in a background thread. Updates session state at checkpoints."""
+def _run_scrape(queries: list[str], preset: str, out_q: queue.Queue) -> None:
+    """Background thread. Feeds out_q; row_callback handles DB write + counter."""
+    def on_row(record: dict) -> None:
+        adapted = _adapt_lead(record)
+        database.save_lead(adapted)
+        out_q.put({"type": "row", "data": adapted})
+
+    def on_log(text: str) -> None:
+        st.session_state.current_query = text
+        out_q.put({"type": "log", "text": text})
+
     try:
-        for i, query in enumerate(queries):
-            st.session_state.current_query = query
-            batch = scraper.scrape_multi([query], delay_preset=preset)
-            for record in batch:
-                database.save_lead(_adapt_lead(record))
-                st.session_state.leads_collected += 1
+        scraper.scrape_multi(
+            queries,
+            delay_preset=preset,
+            row_callback=on_row,
+            log_callback=on_log,
+        )
     except Exception as exc:  # noqa: BLE001
-        st.session_state.scrape_error = str(exc)
+        out_q.put({"type": "error", "text": str(exc)})
     finally:
+        out_q.put({"type": "done"})
         st.session_state.scraping_active = False
         st.session_state.current_query = "—"
 
@@ -192,12 +248,15 @@ with st.container(horizontal=True):
         help="Disabled when no queries entered or scrape already running.",
     ):
         preset = _SPEED_MAP.get(speed_label, "normal")
+        out_q: queue.Queue = queue.Queue()
         st.session_state.scraping_active = True
         st.session_state.leads_collected = 0
         st.session_state.scrape_error = None
+        st.session_state.log_lines = []
+        st.session_state.scrape_queue = out_q
         t = threading.Thread(
             target=_run_scrape,
-            args=(parsed_queries, preset),
+            args=(parsed_queries, preset, out_q),
             daemon=True,
         )
         t.start()
