@@ -1,5 +1,6 @@
 """Automation logic: Playwright-driven scraping with stealth."""
 
+import re
 import random
 import time
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
@@ -26,6 +27,141 @@ _SCROLL_JITTER_MAX = 3.5
 _SCROLL_STALE_LIMIT = 3
 _FEED_SELECTORS = ('div[role="feed"]', '[aria-label*="Results"]')
 _END_OF_LIST_TEXT = "You've reached the end of the list"
+_PLACE_LINK_SELECTOR = 'a[href*="/maps/place/"]'
+_WEBSITE_ITEM_ID = 'authority'
+_PHONE_ITEM_ID = 'phone'
+_PHONE_REGEX = re.compile(
+    r'(?:'
+    r'\+\d{1,3}[\s\-\.]?\(?\d{1,4}\)?[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,9}'
+    r'|\(?\d{3}\)?[\s\-\.]?\d{3}[\s\-\.]?\d{4}'
+    r'|\d{4,5}[\s\-]\d{5,6}'
+    r')'
+)
+
+
+def _extract_name(soup) -> str:
+    try:
+        link = soup.select_one(_PLACE_LINK_SELECTOR)
+        if link:
+            label = link.get('aria-label', '').strip()
+            if label:
+                return label
+        heading = soup.select_one('[role="heading"]')
+        if heading:
+            return heading.get_text(strip=True)
+    except Exception:
+        pass
+    return ''
+
+
+def _extract_rating(soup) -> str:
+    try:
+        star_el = soup.select_one('[aria-label*=" stars"]') or \
+                  soup.select_one('[aria-label*=" star"]')
+        if star_el:
+            m = re.search(r'(\d+\.?\d*)\s+stars?', star_el.get('aria-label', ''))
+            if m:
+                return m.group(1)
+        out_of_el = soup.select_one('[aria-label*="out of 5"]')
+        if out_of_el:
+            m = re.search(r'(\d+\.?\d*)\s+out of 5', out_of_el.get('aria-label', ''))
+            if m:
+                return m.group(1)
+    except Exception:
+        pass
+    return ''
+
+
+def _extract_review_count(soup) -> str:
+    try:
+        for text_node in soup.find_all(string=re.compile(r'\(\d[\d,]*\)')):
+            m = re.search(r'\((\d[\d,]*)\)', text_node)
+            if m:
+                return m.group(1)
+    except Exception:
+        pass
+    return ''
+
+
+def _extract_phone(soup) -> str:
+    try:
+        phone_el = soup.select_one(f'[data-item-id*="{_PHONE_ITEM_ID}"]')
+        if phone_el:
+            return phone_el.get_text(strip=True)
+        m = _PHONE_REGEX.search(soup.get_text(' '))
+        if m:
+            return m.group(0).strip()
+    except Exception:
+        pass
+    return ''
+
+
+def _extract_website(soup) -> str:
+    try:
+        web_el = soup.select_one(f'a[data-item-id="{_WEBSITE_ITEM_ID}"]')
+        if web_el:
+            return web_el.get('href', '')
+        for link in soup.select('a[href^="http"]'):
+            href = link.get('href', '')
+            if 'google.com' not in href:
+                return href
+    except Exception:
+        pass
+    return ''
+
+
+def _parse_business_node(html: str) -> dict:
+    """Parse inner HTML of one business card node into a field dict.
+
+    Returns a dict with keys: name, rating, reviews, phone, website.
+    Every field defaults to '' on extraction failure.
+    """
+    try:
+        soup = BeautifulSoup(html, 'lxml')
+        return {
+            'name': _extract_name(soup),
+            'rating': _extract_rating(soup),
+            'reviews': _extract_review_count(soup),
+            'phone': _extract_phone(soup),
+            'website': _extract_website(soup),
+        }
+    except Exception:
+        return {'name': '', 'rating': '', 'reviews': '', 'phone': '', 'website': ''}
+
+
+def _collect_nodes(page) -> list[str]:
+    """Collect inner HTML strings for each unique business node in the feed.
+
+    Queries within the feed container to avoid promoted pins outside the panel.
+    De-duplicates by /maps/place/ path (strips query string) so photo anchors
+    and title anchors pointing to the same place are only collected once.
+    """
+    feed_el = (
+        page.query_selector('div[role="feed"]')
+        or page.query_selector('[aria-label*="Results"]')
+    )
+    if not feed_el:
+        return []
+
+    anchors = feed_el.query_selector_all(_PLACE_LINK_SELECTOR)
+    seen: set[str] = set()
+    results: list[str] = []
+
+    for anchor in anchors:
+        try:
+            href = anchor.get_attribute('href') or ''
+            key = href.split('?')[0]
+            if key in seen:
+                continue
+            seen.add(key)
+            html = anchor.evaluate(
+                '(el) => (el.closest("[jsaction]") || el.parentElement).innerHTML'
+            )
+            results.append(html)
+        except Exception:
+            continue
+
+    return results
 
 
 def _build_context(browser):
@@ -117,7 +253,9 @@ def scrape(url: str) -> list[dict]:
                 page.goto(url, wait_until="networkidle")
                 _dismiss_consent(page)
                 _scroll_feed(page)
-    return []
+                nodes_html = _collect_nodes(page)
+    results = [r for r in (_parse_business_node(h) for h in nodes_html) if r.get('name')]
+    return results
 
 
 if __name__ == "__main__":  # pragma: no cover

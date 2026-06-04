@@ -1,6 +1,7 @@
 playwright>=1.44
 playwright-stealth
 beautifulsoup4
+lxml
 pandas
 streamlit
 pytest
