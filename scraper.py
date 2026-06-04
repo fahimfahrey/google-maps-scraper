@@ -114,11 +114,12 @@ def scrape(url: str) -> list[dict]:
             with _build_context(browser) as context:
                 page = context.new_page()
                 _block_media(page)
-                page.goto(_MAPS_URL, wait_until="networkidle")
+                page.goto(url, wait_until="networkidle")
                 _dismiss_consent(page)
+                _scroll_feed(page)
     return []
 
 
 if __name__ == "__main__":
-    result = scrape("unused")
-    print("Browser init OK, consent dismissed, result:", result)
+    result = scrape("https://www.google.com/maps/search/coffee+shops+london")
+    print("Scroll complete, results:", result)

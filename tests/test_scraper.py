@@ -125,14 +125,15 @@ class TestScrape:
         mock_sync_playwright.return_value.__exit__.return_value = None
 
         with patch("scraper._build_context", return_value=mock_context):
-            with patch("scraper._dismiss_consent"):
+            with patch("scraper._dismiss_consent"), \
+                 patch("scraper._scroll_feed"):
                 result = scraper.scrape("unused")
 
         assert result == []
 
     @patch("scraper.sync_playwright")
     def test_scrape_navigates_to_maps_url(self, mock_sync_playwright):
-        """Assert scrape navigates to _MAPS_URL."""
+        """Assert scrape navigates to the supplied url."""
         mock_p = MagicMock()
         mock_browser = MagicMock()
         mock_context = MagicMock()
@@ -149,12 +150,12 @@ class TestScrape:
         mock_sync_playwright.return_value.__enter__.return_value = mock_p
         mock_sync_playwright.return_value.__exit__.return_value = None
 
-        with patch("scraper._dismiss_consent"):
-            scraper.scrape("unused")
+        test_url = "https://www.google.com/maps/search/test"
+        with patch("scraper._dismiss_consent"), \
+             patch("scraper._scroll_feed"):
+            scraper.scrape(test_url)
 
-        mock_page.goto.assert_called_once_with(
-            scraper._MAPS_URL, wait_until="networkidle"
-        )
+        mock_page.goto.assert_called_once_with(test_url, wait_until="networkidle")
 
     @patch("scraper.sync_playwright")
     def test_scrape_calls_dismiss_consent(self, mock_sync_playwright):
@@ -175,7 +176,8 @@ class TestScrape:
         mock_sync_playwright.return_value.__enter__.return_value = mock_p
         mock_sync_playwright.return_value.__exit__.return_value = None
 
-        with patch("scraper._dismiss_consent") as mock_dismiss:
+        with patch("scraper._dismiss_consent") as mock_dismiss, \
+             patch("scraper._scroll_feed"):
             scraper.scrape("unused")
             mock_dismiss.assert_called_once_with(mock_page)
 
@@ -204,7 +206,8 @@ class TestScrape:
         )
         mock_page.goto.side_effect = lambda *args, **kwargs: call_order.append("goto")
 
-        with patch("scraper._dismiss_consent"):
+        with patch("scraper._dismiss_consent"), \
+             patch("scraper._scroll_feed"):
             scraper.scrape("unused")
 
         # route (block_media) should be called before goto
@@ -228,7 +231,8 @@ class TestScrape:
         mock_sync_playwright.return_value.__exit__.return_value = None
 
         with patch("scraper._build_context", return_value=mock_context):
-            with patch("scraper._dismiss_consent"):
+            with patch("scraper._dismiss_consent"), \
+                 patch("scraper._scroll_feed"):
                 scraper.scrape("unused")
 
         mock_p.chromium.launch.assert_called_once()
@@ -504,3 +508,82 @@ class TestScrollFeed:
             scraper._scroll_feed(mock_page)
 
         mock_locate.assert_called_once_with(mock_page)
+
+
+class TestScrapeScrollIntegration:
+    """Tests that scrape() wires _scroll_feed after navigation."""
+
+    @patch("scraper.sync_playwright")
+    def test_scrape_calls_scroll_feed_with_page(self, mock_sync_playwright):
+        """scrape() calls _scroll_feed(page) after navigation."""
+        mock_p = MagicMock()
+        mock_browser = MagicMock()
+        mock_context = MagicMock()
+        mock_page = MagicMock()
+
+        mock_p.chromium.launch.return_value.__enter__.return_value = mock_browser
+        mock_p.chromium.launch.return_value.__exit__.return_value = None
+        mock_context.__enter__.return_value = mock_context
+        mock_context.__exit__.return_value = None
+        mock_context.new_page.return_value = mock_page
+        mock_browser.new_context.return_value = mock_context
+        mock_sync_playwright.return_value.__enter__.return_value = mock_p
+        mock_sync_playwright.return_value.__exit__.return_value = None
+
+        with patch("scraper._dismiss_consent"), \
+             patch("scraper._scroll_feed") as mock_scroll:
+            scraper.scrape("https://www.google.com/maps/search/coffee+shops")
+
+        mock_scroll.assert_called_once_with(mock_page)
+
+    @patch("scraper.sync_playwright")
+    def test_scrape_navigates_to_supplied_url(self, mock_sync_playwright):
+        """scrape() navigates to the caller-supplied url, not _MAPS_URL."""
+        mock_p = MagicMock()
+        mock_browser = MagicMock()
+        mock_context = MagicMock()
+        mock_page = MagicMock()
+
+        mock_p.chromium.launch.return_value.__enter__.return_value = mock_browser
+        mock_p.chromium.launch.return_value.__exit__.return_value = None
+        mock_context.__enter__.return_value = mock_context
+        mock_context.__exit__.return_value = None
+        mock_context.new_page.return_value = mock_page
+        mock_browser.new_context.return_value = mock_context
+        mock_sync_playwright.return_value.__enter__.return_value = mock_p
+        mock_sync_playwright.return_value.__exit__.return_value = None
+
+        test_url = "https://www.google.com/maps/search/gyms+near+london"
+
+        with patch("scraper._dismiss_consent"), \
+             patch("scraper._scroll_feed"):
+            scraper.scrape(test_url)
+
+        mock_page.goto.assert_called_once_with(test_url, wait_until="networkidle")
+
+    @patch("scraper.sync_playwright")
+    def test_scrape_scroll_called_after_consent(self, mock_sync_playwright):
+        """_scroll_feed is called after _dismiss_consent, not before."""
+        mock_p = MagicMock()
+        mock_browser = MagicMock()
+        mock_context = MagicMock()
+        mock_page = MagicMock()
+
+        mock_p.chromium.launch.return_value.__enter__.return_value = mock_browser
+        mock_p.chromium.launch.return_value.__exit__.return_value = None
+        mock_context.__enter__.return_value = mock_context
+        mock_context.__exit__.return_value = None
+        mock_context.new_page.return_value = mock_page
+        mock_browser.new_context.return_value = mock_context
+        mock_sync_playwright.return_value.__enter__.return_value = mock_p
+        mock_sync_playwright.return_value.__exit__.return_value = None
+
+        call_order = []
+
+        with patch("scraper._dismiss_consent",
+                   side_effect=lambda *a: call_order.append("consent")), \
+             patch("scraper._scroll_feed",
+                   side_effect=lambda *a: call_order.append("scroll")):
+            scraper.scrape("https://www.google.com/maps/search/test")
+
+        assert call_order.index("consent") < call_order.index("scroll")
