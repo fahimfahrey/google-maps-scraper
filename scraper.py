@@ -162,6 +162,7 @@ def _collect_nodes(page) -> list[str]:
                 '(el) => (el.closest("[jsaction]") || el.parentElement).innerHTML'
             )
             results.append(html)
+            time.sleep(random.uniform(_PROFILE_DELAY_MIN, _PROFILE_DELAY_MAX))
         except Exception:
             continue
 

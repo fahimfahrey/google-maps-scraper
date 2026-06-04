@@ -1000,6 +1000,81 @@ class TestCollectNodes:
         assert result == []
 
 
+class TestCollectNodesDelay:
+    """Tests for per-profile sleep inside _collect_nodes."""
+
+    def test_sleep_called_once_per_evaluated_anchor(self):
+        mock_page = MagicMock()
+        mock_feed_el = MagicMock()
+        mock_page.query_selector.return_value = mock_feed_el
+
+        anchor1, anchor2 = MagicMock(), MagicMock()
+        mock_feed_el.query_selector_all.return_value = [anchor1, anchor2]
+        anchor1.get_attribute.return_value = '/maps/place/CafeA'
+        anchor2.get_attribute.return_value = '/maps/place/CafeB'
+        anchor1.evaluate.return_value = '<div>A</div>'
+        anchor2.evaluate.return_value = '<div>B</div>'
+
+        with patch('scraper.time') as mock_time, \
+             patch('scraper.random.uniform', return_value=3.0):
+            scraper._collect_nodes(mock_page)
+
+        assert mock_time.sleep.call_count == 2
+
+    def test_sleep_uses_profile_delay_constants(self):
+        mock_page = MagicMock()
+        mock_feed_el = MagicMock()
+        mock_page.query_selector.return_value = mock_feed_el
+
+        anchor = MagicMock()
+        mock_feed_el.query_selector_all.return_value = [anchor]
+        anchor.get_attribute.return_value = '/maps/place/CafeX'
+        anchor.evaluate.return_value = '<div>X</div>'
+
+        with patch('scraper.time') as mock_time, \
+             patch('scraper.random.uniform', return_value=2.5) as mock_uniform:
+            scraper._collect_nodes(mock_page)
+
+        mock_uniform.assert_called_with(
+            scraper._PROFILE_DELAY_MIN, scraper._PROFILE_DELAY_MAX
+        )
+        mock_time.sleep.assert_called_once_with(2.5)
+
+    def test_sleep_not_called_on_evaluate_exception(self):
+        mock_page = MagicMock()
+        mock_feed_el = MagicMock()
+        mock_page.query_selector.return_value = mock_feed_el
+
+        anchor = MagicMock()
+        mock_feed_el.query_selector_all.return_value = [anchor]
+        anchor.get_attribute.return_value = '/maps/place/CafeErr'
+        anchor.evaluate.side_effect = Exception('DOM error')
+
+        with patch('scraper.time') as mock_time:
+            scraper._collect_nodes(mock_page)
+
+        mock_time.sleep.assert_not_called()
+
+    def test_sleep_not_called_for_duplicate_anchor(self):
+        mock_page = MagicMock()
+        mock_feed_el = MagicMock()
+        mock_page.query_selector.return_value = mock_feed_el
+
+        anchor1, anchor2 = MagicMock(), MagicMock()
+        mock_feed_el.query_selector_all.return_value = [anchor1, anchor2]
+        # Both anchors point to the same place (duplicate)
+        anchor1.get_attribute.return_value = '/maps/place/CafeA?data=1'
+        anchor2.get_attribute.return_value = '/maps/place/CafeA?data=2'
+        anchor1.evaluate.return_value = '<div>A</div>'
+
+        with patch('scraper.time') as mock_time, \
+             patch('scraper.random.uniform', return_value=2.0):
+            scraper._collect_nodes(mock_page)
+
+        # Only first anchor evaluated → only one sleep
+        assert mock_time.sleep.call_count == 1
+
+
 class TestScrapeReturnsResults:
     """Tests that scrape() returns parsed results from _collect_nodes."""
 
