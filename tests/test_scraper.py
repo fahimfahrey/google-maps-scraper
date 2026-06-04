@@ -1108,6 +1108,152 @@ class TestCollectNodesDelay:
         assert mock_time.sleep.call_count == 1
 
 
+class TestScrapeOneUrl:
+    """Tests for _scrape_one_url(browser, url) helper."""
+
+    def _make_ctx(self):
+        mock_ctx = MagicMock()
+        mock_ctx.__enter__ = MagicMock(return_value=mock_ctx)
+        mock_ctx.__exit__ = MagicMock(return_value=False)
+        mock_page = MagicMock()
+        mock_ctx.new_page.return_value = mock_page
+        return mock_ctx, mock_page
+
+    def test_calls_build_context_with_browser(self):
+        mock_browser = MagicMock()
+        mock_ctx, _ = self._make_ctx()
+
+        with patch('scraper._build_context', return_value=mock_ctx) as mock_bc, \
+             patch('scraper._dismiss_consent'), \
+             patch('scraper._scroll_feed'), \
+             patch('scraper._collect_nodes', return_value=[]):
+            scraper._scrape_one_url(mock_browser, 'https://example.com')
+
+        mock_bc.assert_called_once_with(mock_browser)
+
+    def test_navigates_to_supplied_url(self):
+        mock_browser = MagicMock()
+        mock_ctx, mock_page = self._make_ctx()
+
+        with patch('scraper._build_context', return_value=mock_ctx), \
+             patch('scraper._dismiss_consent'), \
+             patch('scraper._scroll_feed'), \
+             patch('scraper._collect_nodes', return_value=[]):
+            scraper._scrape_one_url(mock_browser, 'https://maps.test/search/gyms')
+
+        mock_page.goto.assert_called_once_with(
+            'https://maps.test/search/gyms', wait_until='networkidle'
+        )
+
+    def test_calls_block_media_before_goto(self):
+        mock_browser = MagicMock()
+        mock_ctx, mock_page = self._make_ctx()
+
+        call_order = []
+        mock_page.route.side_effect = lambda *a, **kw: call_order.append('route')
+        mock_page.goto.side_effect = lambda *a, **kw: call_order.append('goto')
+
+        with patch('scraper._build_context', return_value=mock_ctx), \
+             patch('scraper._dismiss_consent'), \
+             patch('scraper._scroll_feed'), \
+             patch('scraper._collect_nodes', return_value=[]):
+            scraper._scrape_one_url(mock_browser, 'https://example.com')
+
+        assert call_order.index('route') < call_order.index('goto')
+
+    def test_calls_dismiss_consent_with_page(self):
+        mock_browser = MagicMock()
+        mock_ctx, mock_page = self._make_ctx()
+
+        with patch('scraper._build_context', return_value=mock_ctx), \
+             patch('scraper._dismiss_consent') as mock_dc, \
+             patch('scraper._scroll_feed'), \
+             patch('scraper._collect_nodes', return_value=[]):
+            scraper._scrape_one_url(mock_browser, 'https://example.com')
+
+        mock_dc.assert_called_once_with(mock_page)
+
+    def test_calls_scroll_feed_with_page(self):
+        mock_browser = MagicMock()
+        mock_ctx, mock_page = self._make_ctx()
+
+        with patch('scraper._build_context', return_value=mock_ctx), \
+             patch('scraper._dismiss_consent'), \
+             patch('scraper._scroll_feed') as mock_sf, \
+             patch('scraper._collect_nodes', return_value=[]):
+            scraper._scrape_one_url(mock_browser, 'https://example.com')
+
+        mock_sf.assert_called_once_with(mock_page)
+
+    def test_returns_parsed_results(self):
+        mock_browser = MagicMock()
+        mock_ctx, _ = self._make_ctx()
+
+        fake = {
+            'name': 'Cafe Z', 'rating': '4.0',
+            'reviews': '50', 'phone': '', 'website': ''
+        }
+
+        with patch('scraper._build_context', return_value=mock_ctx), \
+             patch('scraper._dismiss_consent'), \
+             patch('scraper._scroll_feed'), \
+             patch('scraper._collect_nodes', return_value=['<div></div>']), \
+             patch('scraper._parse_business_node', return_value=fake):
+            result = scraper._scrape_one_url(mock_browser, 'https://example.com')
+
+        assert result == [fake]
+
+    def test_filters_nodes_with_empty_name(self):
+        mock_browser = MagicMock()
+        mock_ctx, _ = self._make_ctx()
+
+        nameless = {'name': '', 'rating': '', 'reviews': '', 'phone': '', 'website': ''}
+
+        with patch('scraper._build_context', return_value=mock_ctx), \
+             patch('scraper._dismiss_consent'), \
+             patch('scraper._scroll_feed'), \
+             patch('scraper._collect_nodes', return_value=['<div></div>']), \
+             patch('scraper._parse_business_node', return_value=nameless):
+            result = scraper._scrape_one_url(mock_browser, 'https://example.com')
+
+        assert result == []
+
+
+class TestScrapeRefactored:
+    """Tests that scrape() delegates to _scrape_one_url."""
+
+    @patch('scraper.sync_playwright')
+    def test_scrape_delegates_to_scrape_one_url(self, mock_pw):
+        mock_p = MagicMock()
+        mock_browser = MagicMock()
+        mock_pw.return_value.__enter__.return_value = mock_p
+        mock_pw.return_value.__exit__.return_value = None
+        mock_p.chromium.launch.return_value.__enter__.return_value = mock_browser
+        mock_p.chromium.launch.return_value.__exit__.return_value = None
+
+        with patch('scraper._scrape_one_url', return_value=[]) as mock_sou:
+            result = scraper.scrape('https://maps.test/search/cafes')
+
+        mock_sou.assert_called_once_with(mock_browser, 'https://maps.test/search/cafes')
+        assert result == []
+
+    @patch('scraper.sync_playwright')
+    def test_scrape_passes_launch_args(self, mock_pw):
+        mock_p = MagicMock()
+        mock_browser = MagicMock()
+        mock_pw.return_value.__enter__.return_value = mock_p
+        mock_pw.return_value.__exit__.return_value = None
+        mock_p.chromium.launch.return_value.__enter__.return_value = mock_browser
+        mock_p.chromium.launch.return_value.__exit__.return_value = None
+
+        with patch('scraper._scrape_one_url', return_value=[]):
+            scraper.scrape('https://maps.test/search/cafes')
+
+        mock_p.chromium.launch.assert_called_once_with(
+            headless=True, args=scraper._LAUNCH_ARGS
+        )
+
+
 class TestScrapeReturnsResults:
     """Tests that scrape() returns parsed results from _collect_nodes."""
 

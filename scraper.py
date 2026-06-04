@@ -253,19 +253,28 @@ def _scroll_feed(page) -> None:
             prev_height = current_height
 
 
+def _scrape_one_url(browser, url: str) -> list[dict]:
+    """Run one full scrape cycle against `url` on an existing browser.
+
+    Creates a fresh BrowserContext (clears cookies/storage), navigates,
+    scrolls, collects nodes, and parses results.  The context is closed
+    when the with-block exits regardless of errors.
+    """
+    with _build_context(browser) as ctx:
+        page = ctx.new_page()
+        _block_media(page)
+        page.goto(url, wait_until="networkidle")
+        _dismiss_consent(page)
+        _scroll_feed(page)
+        nodes_html = _collect_nodes(page)
+    return [r for r in (_parse_business_node(h) for h in nodes_html) if r.get('name')]
+
+
 def scrape(url: str) -> list[dict]:
     """Scrape `url` and return list of result dicts."""
     with sync_playwright() as p:
         with p.chromium.launch(headless=True, args=_LAUNCH_ARGS) as browser:
-            with _build_context(browser) as context:
-                page = context.new_page()
-                _block_media(page)
-                page.goto(url, wait_until="networkidle")
-                _dismiss_consent(page)
-                _scroll_feed(page)
-                nodes_html = _collect_nodes(page)
-    results = [r for r in (_parse_business_node(h) for h in nodes_html) if r.get('name')]
-    return results
+            return _scrape_one_url(browser, url)
 
 
 if __name__ == "__main__":  # pragma: no cover
