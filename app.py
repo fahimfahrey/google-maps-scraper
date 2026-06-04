@@ -63,6 +63,9 @@ def _drain_queue(out_q: queue.Queue, state: dict) -> None:
                 logs: list = state.get("log_lines", [])
                 logs.append(msg["text"])
                 state["log_lines"] = logs
+                # Current-query indicator is driven by the queue (the background
+                # thread has no ScriptRunContext and cannot write session_state).
+                state["current_query"] = msg["text"]
             elif mtype == "error":
                 state["scrape_error"] = msg["text"]
             elif mtype == "done":
@@ -82,6 +85,7 @@ st.session_state.setdefault("current_query", "—")
 st.session_state.setdefault("scrape_error", None)
 st.session_state.setdefault("scrape_queue", None)
 st.session_state.setdefault("log_lines", [])
+st.session_state.setdefault("max_results_cap", None)
 
 # ---------------------------------------------------------------------------
 # DB bootstrap
@@ -130,6 +134,16 @@ with st.sidebar:
         "Fast":            "fast",
     }
 
+    max_results_input = st.number_input(
+        "Max results (0 = unlimited)",
+        min_value=0,
+        max_value=1000,
+        value=50,
+        step=10,
+        help="Stop once this many unique leads are collected across all queries.",
+        key="max_results_input",
+    )
+
 # ---------------------------------------------------------------------------
 # Status metrics — auto-refreshes every 2 s while scraping
 # ---------------------------------------------------------------------------
@@ -140,6 +154,11 @@ def _status_panel() -> None:
     out_q: queue.Queue | None = st.session_state.scrape_queue
     if out_q is not None:
         _drain_queue(out_q, st.session_state)
+        if not st.session_state.scraping_active:
+            # Scrape just finished ('done' drained). A full app rerun
+            # re-evaluates run_every → None, stopping the 2 s auto-refresh
+            # loop; otherwise the fragment keeps polling forever.
+            st.rerun(scope="app")
 
     total_in_db = database.count_leads()
 
@@ -161,6 +180,12 @@ def _status_panel() -> None:
         )
         st.metric("Status", value=status_text, border=True)
 
+    # Progress toward the configured cap (only when a limit is set).
+    cap = st.session_state.get("max_results_cap")
+    if st.session_state.scraping_active and cap:
+        collected = min(st.session_state.leads_collected, cap)
+        st.progress(collected / cap, text=f"{collected} / {cap} leads")
+
     if st.session_state.scraping_active:
         st.caption(f"Current query: **{st.session_state.current_query}**")
 
@@ -174,48 +199,60 @@ def _status_panel() -> None:
             ":material/terminal: Live log",
             expanded=st.session_state.scraping_active,
         ):
-            log_slot = st.empty()
-            log_slot.code("\n".join(log_lines[-50:]), language=None)
+            st.code("\n".join(log_lines[-50:]), language=None)
+
+    # Live results table — rendered inside the fragment so it refreshes
+    # every 2 s while scraping (previously it sat outside and never updated).
+    with st.container(border=True):
+        st.subheader(":material/table: Collected Leads")
+        _df = database.fetch_all_leads_as_dataframe()
+        if _df.empty:
+            st.info("No leads yet. Enter queries in the sidebar and click **Start Scraping**.")
+        else:
+            st.caption(f"{len(_df)} leads stored")
+            st.dataframe(
+                _df,
+                hide_index=True,
+                width="stretch",
+                column_config={
+                    "id":            None,
+                    "google_id":     None,
+                    "address":       None,
+                    "category":      None,
+                    "scraped_at":    st.column_config.DatetimeColumn("Scraped at", format="MMM DD, YYYY HH:mm"),
+                    "name":          st.column_config.TextColumn("Name", width="medium"),
+                    "rating":        st.column_config.NumberColumn("Rating", format="%.1f ⭐"),
+                    "reviews_count": st.column_config.NumberColumn("Reviews"),
+                    "phone":         st.column_config.TextColumn("Phone"),
+                    "website":       st.column_config.LinkColumn("Website"),
+                },
+            )
 
 
 _status_panel()
 
 # ---------------------------------------------------------------------------
-# Live data table
-# ---------------------------------------------------------------------------
-
-with st.container(border=True):
-    st.subheader(":material/table: Collected Leads")
-    _df = database.fetch_all_leads_as_dataframe()
-    if _df.empty:
-        st.info("No leads yet. Enter queries in the sidebar and click **Start Scraping**.")
-    else:
-        st.dataframe(
-            _df,
-            hide_index=True,
-            column_config={
-                "id":            None,
-                "google_id":     None,
-                "scraped_at":    st.column_config.DatetimeColumn("Scraped at", format="MMM DD, YYYY HH:mm"),
-                "rating":        st.column_config.NumberColumn("Rating", format="%.1f ⭐"),
-                "reviews_count": st.column_config.NumberColumn("Reviews"),
-                "website":       st.column_config.LinkColumn("Website"),
-            },
-        )
-
-# ---------------------------------------------------------------------------
 # Background scraper thread
 # ---------------------------------------------------------------------------
 
-def _run_scrape(queries: list[str], preset: str, out_q: queue.Queue) -> None:
-    """Background thread. Feeds out_q; row_callback handles DB write + counter."""
+def _run_scrape(
+    queries: list[str],
+    preset: str,
+    out_q: queue.Queue,
+    max_results: int | None = None,
+) -> None:
+    """Background thread. Feeds out_q; row_callback handles DB write + counter.
+
+    Runs without a Streamlit ScriptRunContext, so it MUST NOT touch
+    st.session_state directly — all state flows back through out_q and is
+    applied by _drain_queue on the main thread.
+    """
     def on_row(record: dict) -> None:
         adapted = _adapt_lead(record)
         database.save_lead(adapted)
         out_q.put({"type": "row", "data": adapted})
 
     def on_log(text: str) -> None:
-        st.session_state.current_query = text
         out_q.put({"type": "log", "text": text})
 
     try:
@@ -224,13 +261,12 @@ def _run_scrape(queries: list[str], preset: str, out_q: queue.Queue) -> None:
             delay_preset=preset,
             row_callback=on_row,
             log_callback=on_log,
+            max_results=max_results,
         )
     except Exception as exc:  # noqa: BLE001
         out_q.put({"type": "error", "text": str(exc)})
     finally:
         out_q.put({"type": "done"})
-        st.session_state.scraping_active = False
-        st.session_state.current_query = "—"
 
 
 # ---------------------------------------------------------------------------
@@ -248,15 +284,17 @@ with st.container(horizontal=True):
         help="Disabled when no queries entered or scrape already running.",
     ):
         preset = _SPEED_MAP.get(speed_label, "normal")
+        cap = int(max_results_input) or None  # 0 → unlimited
         out_q: queue.Queue = queue.Queue()
         st.session_state.scraping_active = True
         st.session_state.leads_collected = 0
         st.session_state.scrape_error = None
         st.session_state.log_lines = []
         st.session_state.scrape_queue = out_q
+        st.session_state.max_results_cap = cap
         t = threading.Thread(
             target=_run_scrape,
-            args=(parsed_queries, preset, out_q),
+            args=(parsed_queries, preset, out_q, cap),
             daemon=True,
         )
         t.start()

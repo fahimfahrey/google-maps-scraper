@@ -608,7 +608,7 @@ class TestScrapeScrollIntegration:
              patch("scraper._scroll_feed") as mock_scroll:
             scraper.scrape("https://www.google.com/maps/search/coffee+shops")
 
-        mock_scroll.assert_called_once_with(mock_page)
+        mock_scroll.assert_called_once_with(mock_page, target=None)
 
     @patch("scraper.sync_playwright")
     def test_scrape_navigates_to_supplied_url(self, mock_sync_playwright):
@@ -655,9 +655,9 @@ class TestScrapeScrollIntegration:
         call_order = []
 
         with patch("scraper._dismiss_consent",
-                   side_effect=lambda *a: call_order.append("consent")), \
+                   side_effect=lambda *a, **k: call_order.append("consent")), \
              patch("scraper._scroll_feed",
-                   side_effect=lambda *a: call_order.append("scroll")):
+                   side_effect=lambda *a, **k: call_order.append("scroll")):
             scraper.scrape("https://www.google.com/maps/search/test")
 
         assert call_order.index("consent") < call_order.index("scroll")
@@ -1202,7 +1202,7 @@ class TestScrapeOneUrl:
              patch('scraper._collect_nodes', return_value=[]):
             scraper._scrape_one_url(mock_browser, 'https://example.com')
 
-        mock_sf.assert_called_once_with(mock_page)
+        mock_sf.assert_called_once_with(mock_page, target=None)
 
     def test_returns_parsed_results(self):
         mock_browser = MagicMock()
@@ -1253,7 +1253,9 @@ class TestScrapeRefactored:
         with patch('scraper._scrape_one_url', return_value=[]) as mock_sou:
             result = scraper.scrape('https://maps.test/search/cafes')
 
-        mock_sou.assert_called_once_with(mock_browser, 'https://maps.test/search/cafes')
+        mock_sou.assert_called_once_with(
+            mock_browser, 'https://maps.test/search/cafes', max_results=None
+        )
         assert result == []
 
     @patch('scraper.sync_playwright')
@@ -1487,9 +1489,9 @@ class TestScrapeReturnsResults:
         call_order = []
 
         with patch('scraper._dismiss_consent'), \
-             patch('scraper._scroll_feed', side_effect=lambda *a: call_order.append('scroll')), \
+             patch('scraper._scroll_feed', side_effect=lambda *a, **k: call_order.append('scroll')), \
              patch('scraper._collect_nodes',
-                   side_effect=lambda *a: call_order.append('collect') or []), \
+                   side_effect=lambda *a, **k: call_order.append('collect') or []), \
              patch('scraper._parse_business_node', return_value={'name': '', 'rating': '', 'reviews': '', 'phone': '', 'website': ''}):
             scraper.scrape('https://www.google.com/maps/search/test')
 
