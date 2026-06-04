@@ -120,6 +120,6 @@ def scrape(url: str) -> list[dict]:
     return []
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     result = scrape("https://www.google.com/maps/search/coffee+shops+london")
     print("Scroll complete, results:", result)
