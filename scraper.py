@@ -22,6 +22,36 @@ _LAUNCH_ARGS = [
     "--disable-setuid-sandbox",
     "--disable-dev-shm-usage",
 ]
+_BROWSER_MARKER_FILE = ".playwright_browser"
+_FIREFOX_LAUNCH_ARGS: list[str] = []
+
+def _read_browser_engine() -> str:
+    """Return the browser engine to use.
+
+    Precedence: PLAYWRIGHT_BROWSER env var > .playwright_browser file > 'chromium'.
+    """
+    import os
+    engine = os.environ.get("PLAYWRIGHT_BROWSER", "").strip().lower()
+    if engine in ("chromium", "firefox"):
+        return engine
+    try:
+        with open(_BROWSER_MARKER_FILE) as fh:
+            engine = fh.read().strip().lower()
+        if engine in ("chromium", "firefox"):
+            return engine
+    except OSError:
+        pass
+    return "chromium"
+
+
+def _launch_browser(p):
+    """Launch the appropriate headless browser based on engine selection."""
+    engine = _read_browser_engine()
+    if engine == "firefox":
+        return p.firefox.launch(headless=True, args=_FIREFOX_LAUNCH_ARGS)
+    return p.chromium.launch(headless=True, args=_LAUNCH_ARGS)
+
+
 _CONSENT_TEXTS = ["Accept all", "Alle akzeptieren", "Tout accepter", "Aceitar tudo"]
 _CONSENT_TIMEOUT_MS = 5_000
 _SCROLL_STEP_PX = 2_000
@@ -280,7 +310,7 @@ def _scrape_one_url(browser, url: str) -> list[dict]:
 def scrape(url: str) -> list[dict]:
     """Scrape `url` and return list of result dicts."""
     with sync_playwright() as p:
-        with p.chromium.launch(headless=True, args=_LAUNCH_ARGS) as browser:
+        with _launch_browser(p) as browser:
             return _scrape_one_url(browser, url)
 
 
@@ -306,7 +336,7 @@ def scrape_multi(
     seen_keys: set[str] = set()
     results: list[dict] = []
     with sync_playwright() as p:
-        with p.chromium.launch(headless=True, args=_LAUNCH_ARGS) as browser:
+        with _launch_browser(p) as browser:
             for i, query in enumerate(queries):
                 if log_callback is not None:
                     log_callback(f"[{i + 1}/{len(queries)}] {query}")

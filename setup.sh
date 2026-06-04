@@ -23,9 +23,21 @@ source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# Fetch standalone Chromium binary
-playwright install chromium
+# Fetch standalone browser binary (Chromium preferred; Firefox fallback for
+# distros not yet in Playwright's Chromium support matrix, e.g. Ubuntu 26.04)
+BROWSER_ENGINE="chromium"
+if ! .venv/bin/playwright install chromium 2>&1; then
+    echo "WARNING: Chromium not supported on this platform. Trying Firefox..." >&2
+    if ! .venv/bin/playwright install firefox 2>&1; then
+        echo "ERROR: Neither Chromium nor Firefox could be installed." >&2
+        exit 1
+    fi
+    BROWSER_ENGINE="firefox"
+fi
+echo "$BROWSER_ENGINE" > .playwright_browser
+echo "Browser engine: $BROWSER_ENGINE (written to .playwright_browser)"
 
 echo ""
 echo "Setup complete. Activate with: source .venv/bin/activate"
 echo "Run UI with:                   streamlit run app.py"
+echo "Browser engine:                $(cat .playwright_browser 2>/dev/null || echo chromium)"

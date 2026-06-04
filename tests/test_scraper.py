@@ -214,31 +214,25 @@ class TestScrape:
         assert call_order.index("route") < call_order.index("goto")
 
     @patch("scraper.sync_playwright")
-    def test_scrape_uses_launch_args(self, mock_sync_playwright):
-        """Assert scrape passes _LAUNCH_ARGS to chromium.launch."""
+    def test_scrape_uses_launch_browser(self, mock_sync_playwright):
+        """Assert scrape calls _launch_browser."""
         mock_p = MagicMock()
         mock_browser = MagicMock()
         mock_context = MagicMock()
-        mock_page = MagicMock()
-
-        mock_p.chromium.launch.return_value.__enter__.return_value = mock_browser
-        mock_p.chromium.launch.return_value.__exit__.return_value = None
-        mock_browser.new_context.return_value.__enter__.return_value = mock_context
-        mock_browser.new_context.return_value.__exit__.return_value = None
-        mock_context.new_page.return_value = mock_page
 
         mock_sync_playwright.return_value.__enter__.return_value = mock_p
         mock_sync_playwright.return_value.__exit__.return_value = None
+        mock_context.__enter__.return_value = mock_context
+        mock_context.__exit__.return_value = None
+        mock_browser.new_context.return_value = mock_context
 
-        with patch("scraper._build_context", return_value=mock_context):
-            with patch("scraper._dismiss_consent"), \
-                 patch("scraper._scroll_feed"):
-                scraper.scrape("unused")
+        with patch("scraper._launch_browser", return_value=mock_browser) as mock_launch:
+            with patch("scraper._build_context", return_value=mock_context):
+                with patch("scraper._dismiss_consent"), \
+                     patch("scraper._scroll_feed"):
+                    scraper.scrape("unused")
 
-        mock_p.chromium.launch.assert_called_once()
-        launch_kwargs = mock_p.chromium.launch.call_args[1]
-        assert launch_kwargs["args"] == scraper._LAUNCH_ARGS
-        assert launch_kwargs["headless"] is True
+        mock_launch.assert_called_once_with(mock_p)
 
     def test_launch_args_disable_sandbox(self):
         """Assert _LAUNCH_ARGS disables sandbox for container environments."""
@@ -1381,16 +1375,15 @@ class TestScrapeMulti:
         mock_time.sleep.assert_called_once_with(10.0)
 
     @patch('scraper.sync_playwright')
-    def test_passes_launch_args(self, mock_pw):
+    def test_calls_launch_browser(self, mock_pw):
         mock_p, _ = self._setup_pw(mock_pw)
 
         with patch('scraper._scrape_one_url', return_value=[]), \
-             patch('scraper.time'):
+             patch('scraper.time'), \
+             patch('scraper._launch_browser', return_value=MagicMock()) as mock_launch:
             scraper.scrape_multi(['q1'])
 
-        mock_p.chromium.launch.assert_called_once_with(
-            headless=True, args=scraper._LAUNCH_ARGS
-        )
+        mock_launch.assert_called_once_with(mock_p)
 
     @patch('scraper.sync_playwright')
     def test_preserves_insertion_order_of_first_occurrences(self, mock_pw):
@@ -1476,3 +1469,73 @@ class TestScrapeReturnsResults:
             scraper.scrape('https://www.google.com/maps/search/test')
 
         assert call_order.index('scroll') < call_order.index('collect')
+
+
+class TestReadBrowserEngine:
+    """Tests for _read_browser_engine."""
+
+    def test_env_var_chromium(self, monkeypatch):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER", "chromium")
+        assert scraper._read_browser_engine() == "chromium"
+
+    def test_env_var_firefox(self, monkeypatch):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER", "firefox")
+        assert scraper._read_browser_engine() == "firefox"
+
+    def test_env_var_takes_precedence_over_file(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER", "chromium")
+        marker = tmp_path / ".playwright_browser"
+        marker.write_text("firefox")
+        monkeypatch.setattr(scraper, "_BROWSER_MARKER_FILE", str(marker))
+        assert scraper._read_browser_engine() == "chromium"
+
+    def test_reads_marker_file_when_no_env(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("PLAYWRIGHT_BROWSER", raising=False)
+        marker = tmp_path / ".playwright_browser"
+        marker.write_text("firefox")
+        monkeypatch.setattr(scraper, "_BROWSER_MARKER_FILE", str(marker))
+        assert scraper._read_browser_engine() == "firefox"
+
+    def test_defaults_to_chromium_when_no_env_no_file(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("PLAYWRIGHT_BROWSER", raising=False)
+        monkeypatch.setattr(scraper, "_BROWSER_MARKER_FILE", str(tmp_path / "missing"))
+        assert scraper._read_browser_engine() == "chromium"
+
+    def test_invalid_engine_in_env_falls_back_to_file(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER", "safari")
+        marker = tmp_path / ".playwright_browser"
+        marker.write_text("firefox")
+        monkeypatch.setattr(scraper, "_BROWSER_MARKER_FILE", str(marker))
+        assert scraper._read_browser_engine() == "firefox"
+
+
+class TestLaunchBrowser:
+    """Tests for _launch_browser."""
+
+    def test_launches_chromium_by_default(self, monkeypatch):
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "chromium")
+        mock_p = MagicMock()
+        scraper._launch_browser(mock_p)
+        mock_p.chromium.launch.assert_called_once_with(
+            headless=True, args=scraper._LAUNCH_ARGS
+        )
+        mock_p.firefox.launch.assert_not_called()
+
+    def test_launches_firefox_when_engine_firefox(self, monkeypatch):
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "firefox")
+        mock_p = MagicMock()
+        scraper._launch_browser(mock_p)
+        mock_p.firefox.launch.assert_called_once_with(
+            headless=True, args=scraper._FIREFOX_LAUNCH_ARGS
+        )
+        mock_p.chromium.launch.assert_not_called()
+
+    def test_firefox_launch_args_is_empty(self):
+        assert scraper._FIREFOX_LAUNCH_ARGS == []
+
+    def test_chromium_launch_args_not_passed_to_firefox(self, monkeypatch):
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "firefox")
+        mock_p = MagicMock()
+        scraper._launch_browser(mock_p)
+        call_kwargs = mock_p.firefox.launch.call_args
+        assert "--no-sandbox" not in call_kwargs.kwargs.get("args", [])
