@@ -308,3 +308,34 @@ class TestLocateFeed:
 
         with pytest.raises(RuntimeError, match="Maps feed container not found"):
             scraper._locate_feed(mock_page)
+
+
+class TestEndOfListVisible:
+    """Tests for _end_of_list_visible helper."""
+
+    def test_returns_true_when_text_present(self):
+        mock_page = MagicMock()
+        mock_locator = MagicMock()
+        mock_locator.count.return_value = 1
+        mock_page.locator.return_value = mock_locator
+
+        assert scraper._end_of_list_visible(mock_page) is True
+
+    def test_returns_false_when_text_absent(self):
+        mock_page = MagicMock()
+        mock_locator = MagicMock()
+        mock_locator.count.return_value = 0
+        mock_page.locator.return_value = mock_locator
+
+        assert scraper._end_of_list_visible(mock_page) is False
+
+    def test_uses_end_of_list_text_constant(self):
+        mock_page = MagicMock()
+        mock_locator = MagicMock()
+        mock_locator.count.return_value = 0
+        mock_page.locator.return_value = mock_locator
+
+        scraper._end_of_list_visible(mock_page)
+
+        call_selector = mock_page.locator.call_args[0][0]
+        assert scraper._END_OF_LIST_TEXT in call_selector

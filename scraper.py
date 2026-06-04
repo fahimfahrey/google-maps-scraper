@@ -72,6 +72,11 @@ def _locate_feed(page):
     )
 
 
+def _end_of_list_visible(page) -> bool:
+    """Return True if the Maps end-of-results notice is present in the DOM."""
+    return page.locator(f'text="{_END_OF_LIST_TEXT}"').count() > 0
+
+
 def scrape(url: str) -> list[dict]:
     """Scrape `url` and return list of result dicts."""
     with sync_playwright() as p:
