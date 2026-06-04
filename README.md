@@ -158,6 +158,19 @@ If the browser does not open, navigate there manually.
 
 ---
 
+## Configuration — environment variables
+
+The scraper supports the following environment variables for advanced configuration:
+
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `PLAYWRIGHT_BROWSER` | Select browser engine (`chromium` or `firefox`) | `PLAYWRIGHT_BROWSER=firefox streamlit run app.py` |
+| `PLAYWRIGHT_BROWSER_EXECUTABLE` | Path to system-installed browser binary | `PLAYWRIGHT_BROWSER_EXECUTABLE=/usr/bin/chromium streamlit run app.py` |
+
+**Note:** On platforms where Playwright cannot download a browser (e.g., Ubuntu 26.04), `setup.sh` automatically detects and uses system-installed browsers. The path is saved to `.playwright_browser_path`, and `PLAYWRIGHT_BROWSER_EXECUTABLE` can override it.
+
+---
+
 ## Usage walkthrough
 
 ### 1. Enter search queries

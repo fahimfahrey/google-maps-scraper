@@ -10,8 +10,9 @@ import scraper
 class TestBuildContext:
     """Tests for _build_context helper."""
 
-    def test_build_context_sets_user_agent(self):
-        """Assert user_agent and viewport are set correctly."""
+    def test_build_context_sets_user_agent_chromium(self, monkeypatch):
+        """Assert user_agent and viewport are set correctly for Chromium."""
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "chromium")
         mock_browser = MagicMock()
         mock_context = MagicMock()
         mock_browser.new_context.return_value = mock_context
@@ -24,8 +25,21 @@ class TestBuildContext:
         )
         assert result is mock_context
 
-    def test_build_context_calls_stealth_sync(self):
-        """Assert Stealth().apply_stealth_sync is called with the context."""
+    def test_build_context_omits_user_agent_firefox(self, monkeypatch):
+        """Assert user_agent is not set for Firefox."""
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "firefox")
+        mock_browser = MagicMock()
+        mock_context = MagicMock()
+        mock_browser.new_context.return_value = mock_context
+
+        scraper._build_context(mock_browser)
+
+        call_kwargs = mock_browser.new_context.call_args[1]
+        assert "user_agent" not in call_kwargs
+
+    def test_build_context_calls_stealth_sync_chromium(self, monkeypatch):
+        """Assert Stealth().apply_stealth_sync is called for Chromium."""
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "chromium")
         mock_browser = MagicMock()
         mock_context = MagicMock()
         mock_browser.new_context.return_value = mock_context
@@ -37,6 +51,17 @@ class TestBuildContext:
             mock_stealth_instance.apply_stealth_sync.assert_called_once_with(
                 mock_context
             )
+
+    def test_build_context_skips_stealth_firefox(self, monkeypatch):
+        """Assert Stealth is not applied for Firefox."""
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "firefox")
+        mock_browser = MagicMock()
+        mock_context = MagicMock()
+        mock_browser.new_context.return_value = mock_context
+
+        with patch("scraper.Stealth") as MockStealth:
+            scraper._build_context(mock_browser)
+            MockStealth.assert_not_called()
 
     def test_user_agent_is_realistic_chrome(self):
         """Assert _USER_AGENT contains Chrome/124 and no HeadlessChrome."""
@@ -1509,11 +1534,55 @@ class TestReadBrowserEngine:
         assert scraper._read_browser_engine() == "firefox"
 
 
+class TestReadBrowserExecutable:
+    """Tests for _read_browser_executable."""
+
+    def test_env_var_returns_path(self, monkeypatch):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER_EXECUTABLE", "/usr/bin/chromium")
+        assert scraper._read_browser_executable() == "/usr/bin/chromium"
+
+    def test_env_var_strips_whitespace(self, monkeypatch):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER_EXECUTABLE", "  /usr/bin/firefox  ")
+        assert scraper._read_browser_executable() == "/usr/bin/firefox"
+
+    def test_env_var_takes_precedence_over_file(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER_EXECUTABLE", "/usr/bin/chromium")
+        marker = tmp_path / ".playwright_browser_path"
+        marker.write_text("/usr/bin/firefox")
+        monkeypatch.setattr(scraper, "_BROWSER_PATH_FILE", str(marker))
+        assert scraper._read_browser_executable() == "/usr/bin/chromium"
+
+    def test_reads_file_when_no_env(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("PLAYWRIGHT_BROWSER_EXECUTABLE", raising=False)
+        marker = tmp_path / ".playwright_browser_path"
+        marker.write_text("/usr/bin/firefox")
+        monkeypatch.setattr(scraper, "_BROWSER_PATH_FILE", str(marker))
+        assert scraper._read_browser_executable() == "/usr/bin/firefox"
+
+    def test_file_strips_whitespace(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("PLAYWRIGHT_BROWSER_EXECUTABLE", raising=False)
+        marker = tmp_path / ".playwright_browser_path"
+        marker.write_text("  /usr/bin/chromium  ")
+        monkeypatch.setattr(scraper, "_BROWSER_PATH_FILE", str(marker))
+        assert scraper._read_browser_executable() == "/usr/bin/chromium"
+
+    def test_returns_none_when_absent(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("PLAYWRIGHT_BROWSER_EXECUTABLE", raising=False)
+        monkeypatch.setattr(scraper, "_BROWSER_PATH_FILE", str(tmp_path / "missing"))
+        assert scraper._read_browser_executable() is None
+
+    def test_returns_none_when_empty_env_and_missing_file(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("PLAYWRIGHT_BROWSER_EXECUTABLE", "")
+        monkeypatch.setattr(scraper, "_BROWSER_PATH_FILE", str(tmp_path / "missing"))
+        assert scraper._read_browser_executable() is None
+
+
 class TestLaunchBrowser:
     """Tests for _launch_browser."""
 
     def test_launches_chromium_by_default(self, monkeypatch):
         monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "chromium")
+        monkeypatch.setattr(scraper, "_read_browser_executable", lambda: None)
         mock_p = MagicMock()
         scraper._launch_browser(mock_p)
         mock_p.chromium.launch.assert_called_once_with(
@@ -1521,8 +1590,18 @@ class TestLaunchBrowser:
         )
         mock_p.firefox.launch.assert_not_called()
 
+    def test_launches_chromium_with_executable_path(self, monkeypatch):
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "chromium")
+        monkeypatch.setattr(scraper, "_read_browser_executable", lambda: "/usr/bin/chromium")
+        mock_p = MagicMock()
+        scraper._launch_browser(mock_p)
+        mock_p.chromium.launch.assert_called_once_with(
+            headless=True, executable_path="/usr/bin/chromium", args=scraper._LAUNCH_ARGS
+        )
+
     def test_launches_firefox_when_engine_firefox(self, monkeypatch):
         monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "firefox")
+        monkeypatch.setattr(scraper, "_read_browser_executable", lambda: None)
         mock_p = MagicMock()
         scraper._launch_browser(mock_p)
         mock_p.firefox.launch.assert_called_once_with(
@@ -1530,11 +1609,21 @@ class TestLaunchBrowser:
         )
         mock_p.chromium.launch.assert_not_called()
 
+    def test_launches_firefox_with_executable_path(self, monkeypatch):
+        monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "firefox")
+        monkeypatch.setattr(scraper, "_read_browser_executable", lambda: "/usr/bin/firefox")
+        mock_p = MagicMock()
+        scraper._launch_browser(mock_p)
+        mock_p.firefox.launch.assert_called_once_with(
+            headless=True, executable_path="/usr/bin/firefox", args=scraper._FIREFOX_LAUNCH_ARGS
+        )
+
     def test_firefox_launch_args_is_empty(self):
         assert scraper._FIREFOX_LAUNCH_ARGS == []
 
     def test_chromium_launch_args_not_passed_to_firefox(self, monkeypatch):
         monkeypatch.setattr(scraper, "_read_browser_engine", lambda: "firefox")
+        monkeypatch.setattr(scraper, "_read_browser_executable", lambda: None)
         mock_p = MagicMock()
         scraper._launch_browser(mock_p)
         call_kwargs = mock_p.firefox.launch.call_args

@@ -29,10 +29,39 @@ BROWSER_ENGINE="chromium"
 if ! .venv/bin/playwright install chromium 2>&1; then
     echo "WARNING: Chromium not supported on this platform. Trying Firefox..." >&2
     if ! .venv/bin/playwright install firefox 2>&1; then
-        echo "ERROR: Neither Chromium nor Firefox could be installed." >&2
-        exit 1
+        echo "WARNING: Firefox not supported on this platform. Trying system-installed browsers..." >&2
+
+        # Fallback 3: use system-installed browser
+        SYSTEM_CHROMIUM=""
+        for candidate in google-chrome-stable google-chrome chromium-browser chromium; do
+            if command -v "$candidate" &>/dev/null; then
+                SYSTEM_CHROMIUM=$(command -v "$candidate")
+                break
+            fi
+        done
+
+        SYSTEM_FIREFOX=""
+        if [[ -z "$SYSTEM_CHROMIUM" ]]; then
+            if command -v firefox &>/dev/null; then
+                SYSTEM_FIREFOX=$(command -v firefox)
+            fi
+        fi
+
+        if [[ -n "$SYSTEM_CHROMIUM" ]]; then
+            echo "Using system Chromium: $SYSTEM_CHROMIUM" >&2
+            BROWSER_ENGINE="chromium"
+            echo "$SYSTEM_CHROMIUM" > .playwright_browser_path
+        elif [[ -n "$SYSTEM_FIREFOX" ]]; then
+            echo "Using system Firefox: $SYSTEM_FIREFOX" >&2
+            BROWSER_ENGINE="firefox"
+            echo "$SYSTEM_FIREFOX" > .playwright_browser_path
+        else
+            echo "ERROR: Neither Chromium nor Firefox could be installed." >&2
+            exit 1
+        fi
+    else
+        BROWSER_ENGINE="firefox"
     fi
-    BROWSER_ENGINE="firefox"
 fi
 echo "$BROWSER_ENGINE" > .playwright_browser
 echo "Browser engine: $BROWSER_ENGINE (written to .playwright_browser)"

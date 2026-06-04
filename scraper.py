@@ -23,6 +23,7 @@ _LAUNCH_ARGS = [
     "--disable-dev-shm-usage",
 ]
 _BROWSER_MARKER_FILE = ".playwright_browser"
+_BROWSER_PATH_FILE = ".playwright_browser_path"
 _FIREFOX_LAUNCH_ARGS: list[str] = []
 
 def _read_browser_engine() -> str:
@@ -44,12 +45,37 @@ def _read_browser_engine() -> str:
     return "chromium"
 
 
+def _read_browser_executable() -> str | None:
+    """Return absolute path to browser binary, or None to use Playwright-managed binary.
+
+    Precedence: PLAYWRIGHT_BROWSER_EXECUTABLE env var > .playwright_browser_path file.
+    """
+    import os
+    path = os.environ.get("PLAYWRIGHT_BROWSER_EXECUTABLE", "").strip()
+    if path:
+        return path
+    try:
+        with open(_BROWSER_PATH_FILE) as fh:
+            path = fh.read().strip()
+        if path:
+            return path
+    except OSError:
+        pass
+    return None
+
+
 def _launch_browser(p):
     """Launch the appropriate headless browser based on engine selection."""
     engine = _read_browser_engine()
+    exe = _read_browser_executable()
+    launch_kwargs = {"headless": True}
+    if exe:
+        launch_kwargs["executable_path"] = exe
     if engine == "firefox":
-        return p.firefox.launch(headless=True, args=_FIREFOX_LAUNCH_ARGS)
-    return p.chromium.launch(headless=True, args=_LAUNCH_ARGS)
+        launch_kwargs["args"] = _FIREFOX_LAUNCH_ARGS
+        return p.firefox.launch(**launch_kwargs)
+    launch_kwargs["args"] = _LAUNCH_ARGS
+    return p.chromium.launch(**launch_kwargs)
 
 
 _CONSENT_TEXTS = ["Accept all", "Alle akzeptieren", "Tout accepter", "Aceitar tudo"]
@@ -213,11 +239,12 @@ def _collect_nodes(page) -> list[str]:
 
 def _build_context(browser):
     """Create and stealth-configure a BrowserContext."""
-    context = browser.new_context(
-        user_agent=_USER_AGENT,
-        viewport={"width": 1280, "height": 800},
-    )
-    Stealth().apply_stealth_sync(context)
+    ctx_kwargs = {"viewport": {"width": 1280, "height": 800}}
+    if _read_browser_engine() != "firefox":
+        ctx_kwargs["user_agent"] = _USER_AGENT
+    context = browser.new_context(**ctx_kwargs)
+    if _read_browser_engine() != "firefox":
+        Stealth().apply_stealth_sync(context)
     return context
 
 

@@ -20,6 +20,7 @@ __pycache__/
 playwright-report/
 test-results/
 .playwright_browser
+.playwright_browser_path
 
 # OS / IDE
 .DS_Store
