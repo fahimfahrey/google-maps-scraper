@@ -25,6 +25,10 @@ _SCROLL_STEP_PX = 2_000
 _SCROLL_JITTER_MIN = 1.5
 _SCROLL_JITTER_MAX = 3.5
 _SCROLL_STALE_LIMIT = 3
+_PROFILE_DELAY_MIN = 2.0
+_PROFILE_DELAY_MAX = 5.0
+_INTER_QUERY_DELAY_MIN = 5.0
+_INTER_QUERY_DELAY_MAX = 15.0
 _FEED_SELECTORS = ('div[role="feed"]', '[aria-label*="Results"]')
 _END_OF_LIST_TEXT = "You've reached the end of the list"
 _PLACE_LINK_SELECTOR = 'a[href*="/maps/place/"]'

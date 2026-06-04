@@ -271,6 +271,28 @@ class TestScrollConstants:
         assert scraper._END_OF_LIST_TEXT == "You've reached the end of the list"
 
 
+class TestProfileDelayConstants:
+    """Tests for per-profile and inter-query delay module constants."""
+
+    def test_profile_delay_min_is_2(self):
+        assert scraper._PROFILE_DELAY_MIN == 2.0
+
+    def test_profile_delay_max_is_5(self):
+        assert scraper._PROFILE_DELAY_MAX == 5.0
+
+    def test_profile_delay_min_less_than_max(self):
+        assert scraper._PROFILE_DELAY_MIN < scraper._PROFILE_DELAY_MAX
+
+    def test_inter_query_delay_min_is_5(self):
+        assert scraper._INTER_QUERY_DELAY_MIN == 5.0
+
+    def test_inter_query_delay_max_is_15(self):
+        assert scraper._INTER_QUERY_DELAY_MAX == 15.0
+
+    def test_inter_query_delay_min_less_than_max(self):
+        assert scraper._INTER_QUERY_DELAY_MIN < scraper._INTER_QUERY_DELAY_MAX
+
+
 class TestLocateFeed:
     """Tests for _locate_feed helper."""
 
